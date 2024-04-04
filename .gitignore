@@ -9,6 +9,7 @@ env
 **/*.pyc
 Dockerfile
 docker-compose.yml
+docker.env
 
 #idea folder
 .idea/

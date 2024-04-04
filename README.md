@@ -72,14 +72,14 @@ Run this command from [backend](backend) directory before you run the backend.
 python manage.py collectstatic
 ```
 ### 1.7. Run backend
-Open source code with Visual Studio -> Chose `Run and Debug` on the left panel -> Click `Start Debuging`
+Open source code with Visual Studio -> Chose `Run and Debug` on the left panel -> Click `Start Debugging`
 
 ## 2. Use docker
-If you would like to use docker on your pc. Please following these steps to build and rund docker container locally
-- Copy [ci/Dockerfile.template](./ci/Dockerfile.template) to the root folder and remane it to `Dockerfile`
-- Copy [ci/docker-compose.yml.local](./ci/docker-compose.yml.local) to the root folder and remane it to `docker-compose.yml`
-- Copy [ci/docker-compose.yml.local](./ci/docker.env.template) to the root folder and remane it to `docker.env`. Open this file and change the environment variables as you want
-- Build and rund docker conatiner:
+If you would like to use docker on your pc. Please following these steps to build and run docker container locally
+- Copy [ci/Dockerfile.template](./ci/Dockerfile.template) to the root folder and rename it to `Dockerfile`
+- Copy [ci/docker-compose.yml.local](./ci/docker-compose.yml.local) to the root folder and rename it to `docker-compose.yml`
+- Copy [ci/docker-compose.yml.local](./ci/docker.env.template) to the root folder and rename it to `docker.env`. Open this file and change the environment variables as you want
+- Build and run docker container:
     ```
     docker-compose up -d --build
     ```
