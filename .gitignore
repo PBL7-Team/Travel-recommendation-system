@@ -145,3 +145,7 @@ gen
 /jwt.pub
 package-lock.json
 */credentials.json
+
+
+postgres-data/
+mysql-data/
