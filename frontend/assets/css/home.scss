@@ -1,0 +1,227 @@
+$vacation-blue: #1e7eae;
+$blue: #0000fd;
+
+* {
+    box-sizing: border-box
+}
+
+.page-wrapper-2 {
+    width: 100%;
+    overflow: hidden;
+}
+
+.main-section-2 {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 100px 5%;
+    display: flex;
+}
+
+.content-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+    display: flex;
+}
+
+._1-2-grid {
+    grid-column-gap: 40px;
+    grid-row-gap: 40px;
+    grid-template-rows: auto;
+    align-items: center;
+}
+
+.w-layout-grid {
+    grid-row-gap: 16px;
+    grid-column-gap: 16px;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-columns: 1fr;
+    display: grid;
+}
+
+.subheader.cta-color {
+    color: #434de7;
+    font-weight: 600;
+}
+
+.spacer-xs {
+    width: 100%;
+    height: 10px;
+}
+
+.form-horizontal {
+    align-items: center;
+    display: flex;
+}
+
+.w-button {
+    color: #fff;
+    line-height: inherit;
+    cursor: pointer;
+    background-color: #3898ec;
+    border: 0;
+    border-radius: 0;
+    padding: 9px 15px;
+    text-decoration: none;
+    display: inline-block
+}
+
+.button-16 {
+    color: #fff;
+    background-color: #434de7;
+    border-radius: 10px;
+    height: 50px;
+    padding: 15px 35px;
+    font-size: 15px;
+    font-weight: 500;
+    box-shadow: 0 10px 20px -3px rgba(29, 1, 80, .1)
+}
+
+.button-16:hover {
+    box-shadow: none;
+    background-color: #000
+}
+
+.button-16.in-horizontal-form {
+    background-color: $blue;
+    align-self: center;
+    height: 52px;
+    margin-top: 0;
+    margin-left: 10px
+}
+
+.input-large.typed-animation {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.input-large {
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #b7bbd1;
+    border-radius: 10px;
+    min-width: 300px;
+    height: 52px;
+    margin-top: 1px;
+    margin-bottom: 0;
+    padding-left: 16px;
+    font-size: 15px;
+    font-weight: 300;
+    transition: border-color .2s, box-shadow .2s;
+    box-shadow: 0 3px 6px -2px rgba(29, 1, 80, .1);
+}
+
+.typed-words {
+    object-fit: fill;
+    border-radius: 10px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 52px;
+    font-weight: 400;
+    display: flex;
+    overflow: hidden;
+     white-space: nowrap;
+    /* Keeps the text on a single line */
+     animation: typing 2s forwards;
+}
+
+ /* The typing animation */
+
+.small-feature-wrap {
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    color: #000;
+    align-items: center;
+    display: flex;
+}
+
+.icon-secondary {
+    color: #fff;
+    background-color: #434de7;
+    border-radius: 50px;
+    justify-content: center;
+    align-items: center;
+    width: 17px;
+    height: 17px;
+    margin-top: 2px;
+    padding: 3px;
+    display: flex;
+    overflow: hidden;
+}
+
+.hero-bg-image {
+     background-image: url('frontend/src/assets/images/travel_bg.jpg');
+    background-position: 50%;
+    background-size: cover;
+    border-radius: 15px;
+    justify-content: flex-end;
+    align-items: flex-end;
+    height: 500px;
+    padding: 25px;
+    display: flex;
+    box-shadow: 1px 1px 20px rgba(29, 1, 80, .1);
+}
+
+.large-inverse-icon {
+    background-color: $blue;
+    color: #fff;
+    border-radius: 50%;
+    justify-content: center;
+    align-self: flex-end;
+    align-items: center;
+    width: 50px;
+    min-width: 50px;
+    height: 50px;
+    min-height: 50px;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px;
+    display: flex;
+}
+
+.w-embed:before,
+.w-embed:after {
+    content: " ";
+    grid-area: 1/1/2/2;
+    display: table
+}
+
+.w-embed:after {
+    clear: both
+}
+
+
+@media screen and (max-width: 991px) {
+
+     Header
+    .menu-icon {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 48px;
+        height: 48px;
+        margin-right: -.5rem;
+        padding-bottom: 0;
+        padding-right: 0;
+        display: flex;
+    }
+
+    ._1-2-grid {
+        flex-direction: column;
+        align-items: flex-start;
+        display: flex;
+    }
+}
+
+
+@media screen and (max-width: 479px) {
+    .form-horizontal {
+        grid-column-gap: 10px;
+        grid-row-gap: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
