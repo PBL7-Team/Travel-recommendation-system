@@ -13,3 +13,17 @@ class Role(models.Model):
 
     class Meta:
         db_table = "roles"
+        
+    @property
+    def scopes(self):
+        """
+        Returns a dictionary of allowed scope names (as keys) with their descriptions (as values)
+        """
+
+        # Don't move this import to global scope, because it it lazay object.
+        from oauth2_provider.scopes import get_scopes_backend
+        all_scopes = get_scopes_backend().get_all_scopes()
+        if self.scope == "__all__":
+            return {name: desc for name, desc in all_scopes.items()}
+        role_scopes = self.scope.split()
+        return {name: desc for name, desc in all_scopes.items() if name in role_scopes}

@@ -13,26 +13,72 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from os.path import join
+import environ
+from . import env, BASE_DIR
 
+from corsheaders.defaults import default_headers
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CUSTOM_BASE_DIR = Path(__file__).resolve().parent.parent.parent
+# Take environment variables from .env file
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r+&iwxovpt95^hy1&dz=)#q=p-ohkqiw9*uj&c9uwfr^7vhr%c'
-
+# SECRET_KEY = 'django-insecure-r+&iwxovpt95^hy1&dz=)#q=p-ohkqiw9*uj&c9uwfr^7vhr%c'
+SECRET_KEY = (
+    os.environ["SECRET_KEY"] if "SECRET_KEY" in os.environ else env("SECRET_KEY")
+)
 # # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
+ALLOWED_HOSTS = ["*"]
+CORS_ORIGIN_ALLOW_ALL = True
 
+CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=True)
+# CORS_ALLOWED_ORIGINS = env.list(
+#     "CORS_ALLOWED_ORIGINS",
+#     default=[
+#         "http://127.0.0.1:5173",
+#         "http://localhost:5173",
+#         "http://localhost:3001",
+#         "http://localhost:3000",
+#         "http://127.0.0.1:3000",
+#         "http://127.0.0.1:3001",
+#     ],
+# )
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+    "http://localhost:3001",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+]
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+# CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOW_HEADERS = list(default_headers)
 
 # Application definition
 
 DJANGO_APPS = (
-    'django.contrib.admin',
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -44,75 +90,127 @@ THIRD_PARTY_APPS = (
     "rest_framework",
     "rest_framework_api_key",
     "oauth2_provider",
+    "corsheaders",
 )
 CUSTOM_APPS = ("api_oauth2",)
 
-LOCAL_APPS = (
-    "api",
-    "api_base",
-    "api_user",
-)
+LOCAL_APPS = ("api", "api_base", "api_user", "destinations","attraction","chat_history_saver")
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware", # Notice the order
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'core.urls'
+ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
+WSGI_APPLICATION = "core.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+# Database
+def db_config(prefix="", test=None):
+    if test is None:
+        test = {}
+    DB_NAME = env("DB_NAME")
+    return {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": prefix + DB_NAME,
+        "USER": (
+            os.environ["DB_USER"] if "DB_USER" in os.environ else os.environ("DB_USER")
+        ),
+        "PASSWORD": (
+            os.environ["DB_PASSWORD"]
+            if "DB_PASSWORD" in os.environ
+            else os.environ("DB_PASSWORD")
+        ),
+        "HOST": (
+            os.environ["DB_HOST"] if "DB_HOST" in os.environ else os.environ("DB_HOST")
+        ),
+        "PORT": (
+            os.environ["DB_PORT"] if "DB_PORT" in os.environ else os.environ("DB_PORT")
+        ),
+        "TEST": test,
+        "OPTIONS": {"charset": "utf8mb4"},
     }
+
+
+DATABASES = {
+    "default": db_config(),
+    "tests": db_config("", {"MIRROR": "default"}),
 }
 
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "oauth2_provider.backends.OAuth2Backend",
+)
+
+REST_FRAMEWORK = {
+    # "DEFAULT_AUTHENTICATION_CLASSES": (
+    #     "rest_framework.authentication.BasicAuthentication",
+    #     "rest_framework.authentication.SessionAuthentication",
+    # )
+    "DEFAULT_PERMISSION_CLASSES": [
+        "api_oauth2.permissions.TokenHasActionScope"
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "api_base.pagination.CustomPagination",
+    "PAGE_SIZE": 12,
+}
+
+
+AUTH_USER_MODEL = "api_user.User"   
+# Xác nhận đăng ký custom Appilcation
+OAUTH2_PROVIDER_APPLICATION_MODEL = "api_oauth2.Application"
+OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = "api_oauth2.AccessToken"
+OAUTH2_PROVIDER_ID_TOKEN_MODEL = "api_oauth2.IDToken"
+OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "api_oauth2.RefreshToken"
+OAUTH2_PROVIDER_GRANT_MODEL =  "api_oauth2.Grant"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -120,9 +218,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -134,23 +232,59 @@ USE_TZ = True
 
 # Static files
 STATIC_ROOT = join(BASE_DIR, "static")
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-API_HOST = 'localhost'
+API_HOST = "localhost"
 API_PORT = 8000
 
+ALLOWED_HOSTS = [API_HOST, "api", "localhost", "host.docker.internal"]
 
-AUTHENTICATION_BACKENDS = (
-    'oauth2_provider.backends.OAuth2Backend',
-    # Uncomment following if you want to access the admin
-    #'django.contrib.auth.backends.ModelBackend'
-    '...',
+DEFAULT_CLIENT_SECRET = (
+    os.environ["DEFAULT_CLIENT_SECRET"]
+    if "DEFAULT_CLIENT_SECRET" in os.environ
+    else env("DEFAULT_CLIENT_SECRET")
+)
+DEFAULT_CLIENT_ID = (
+    os.environ["DEFAULT_CLIENT_ID"]
+    if "DEFAULT_CLIENT_ID" in os.environ
+    else env("DEFAULT_CLIENT_ID")
 )
 
+COMMON_CLIENT_SECRET = (
+    os.environ["COMMON_CLIENT_SECRET"]
+    if "COMMON_CLIENT_SECRET" in os.environ
+    else env("COMMON_CLIENT_SECRET")
+)
+COMMON_CLIENT_ID = (
+    os.environ["COMMON_CLIENT_ID"]
+    if "COMMON_CLIENT_ID" in os.environ
+    else env("COMMON_CLIENT_ID")
+)
 
-ALLOWED_HOSTS = [API_HOST, "api", "localhost", "host.docker.internal"]
+SUPER_ADMIN_EMAIL = (
+    os.environ["SUPER_ADMIN_EMAIL"]
+    if "SUPER_ADMIN_EMAIL" in os.environ
+    else env.str("SUPER_ADMIN_EMAIL", default="service@pandosima.com")
+)
+SUPER_ADMIN_PASSWORD = (
+    os.environ["SUPER_ADMIN_PASSWORD"]
+    if "SUPER_ADMIN_PASSWORD" in os.environ
+    else env.str("SUPER_ADMIN_PASSWORD", default="")
+)
+
+#Email service
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env("EMAIL_HOST", default="smtp.gmail.com")
+EMAIL_PORT = env("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = env.str(
+    "DEFAULT_FROM_EMAIL", default="BVH <noreply@pbl7.com>"
+)
+
+LOGIN_URL = "/admin/login/"
