@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: PBL7-Recomemndation-System
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/backend
+    depends_on:
+      - db
+      # - redis
+
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=pbl7-database
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_HOST=db
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+  # redis:
+  #   image: redis:alpine
+  #   container_name: PBL7-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   sysctls:
+  #     - net.core.somaxconn=511
+
+networks:
+  backend-exa:
+    driver: bridge
+
+volumes:
+  # redis-data:
+  mysql-data:
