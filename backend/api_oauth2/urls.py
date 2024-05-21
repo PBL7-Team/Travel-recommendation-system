@@ -10,6 +10,6 @@ router = routers.SimpleRouter(trailing_slash=False)
 router.register(r"", Oauth2ViewSet, basename="oauth2")
 
 urlpatterns = [
-    # path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     re_path(r'^api/v1/', include(router.urls)),
+    
 ]

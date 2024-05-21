@@ -12,7 +12,7 @@ from oauth2_provider.views.mixins import OAuthLibMixin
 from rest_framework.response import Response
 from django.utils.translation import gettext as _
 from api_user.serializers import CreateUserSerializer
-from api_oauth2.services import send_verify_email
+from api_oauth2.services import OAuth2Service
 from core.settings.base import (
     DEFAULT_CLIENT_ID,
     DEFAULT_CLIENT_SECRET,
@@ -150,13 +150,11 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
         {"username": "username", "password": "1234abcd"}
         '''
         # Put the data from the request into the serializer 
-        print(request.data)
         serializer = CreateUserSerializer(data=request.data) 
         # Validate the data
         if serializer.is_valid():
             # If it is valid, save the data (creates a user).
             user=serializer.save() 
-
             # Then we get a token for the created user.
             # This could be done differentley 
            
@@ -169,18 +167,18 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             #         'client_secret': DEFAULT_CLIENT_ID,
             #     },
             # )
-            request.POST._mutable = True
-            request.POST.update(
-                {
-                    "grant_type": "password",
-                    "client_type": "confidential",
-                    'username': request.data['email'],
-                    'password': request.data['password'],   
-                    "client_id": DEFAULT_CLIENT_ID,
-                    "client_secret": DEFAULT_CLIENT_SECRET,
-                   # "scope": list_to_scope(scopes)
-                }
-            )
+            # request.POST._mutable = True
+            # request.POST.update(
+            #     {
+            #         "grant_type": "password",
+            #         "client_type": "confidential",
+            #         'username': request.data['email'],
+            #         'password': request.data['password'],   
+            #         "client_id": DEFAULT_CLIENT_ID,
+            #         "client_secret": DEFAULT_CLIENT_SECRET,
+            #        # "scope": list_to_scope(scopes)
+            #     }
+            # )
             # url, headers, body, status = self.create_token_response(request)
             # if status == 200:
             #     access_token = json.loads(body).get("access_token")
@@ -195,23 +193,23 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             
             # Send welcome email
             try:
-                send_verify_email(request,user)
-                Response({"message": _("The invitation have been sent.")}, status=HTTP_200_OK)
+                OAuth2Service.send_verify_email(request,user)
+                return Response({"message": _("The invitation have been sent.")}, status=HTTP_200_OK)
             except Exception as e:
                 print(e)
-            Response({"message": _("There is an error occur.")}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({"message": _("There is an error occur.")}, status=HTTP_500_INTERNAL_SERVER_ERROR)
             
-        return Response(serializer.errors)
+        return Response(serializer.errors, status=HTTP_401_UNAUTHORIZED)
     
     
     @action(detail=False, methods=["post"], url_path="login", permission_classes=[AllowAny], authentication_classes=[])
     def login(self, request, pk=None):
         try:
             user_name = request.POST.get("username")
-            user = User.objects.prefetch_related( "roles").get(email=user_name)
+            user = User.objects.prefetch_related("roles").get(email=user_name)
             # This is not administrator account
             if user.roles is None:
-                raise User.DoesNotExist(message = 'The user is not an administrator')
+                raise User.DoesNotExist(message = 'The user is not Admin')
         except User.DoesNotExist:
             return Response(
                     {"error": _("The user does not exist.")},

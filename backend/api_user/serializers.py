@@ -11,12 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
         
 class CreateUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        print(validated_data)
-        # password = validated_data.pop('password', None)
         user = User.objects.create_user(**validated_data)
-        # user = User.objects.create_user(
-        #     **validated_data
-        # )
         role, created = Role.objects.get_or_create(
             name="User",
             description="user in app",
