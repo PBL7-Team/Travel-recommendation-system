@@ -51,7 +51,7 @@ const links = [
                         </div>
                     </div>
                     <li class="md:mx-4">
-                        <a href="/auth/login" class="text-xl hover:text-green-500">Login</a>
+                        <a href="/auth/newlogin" class="text-xl hover:text-green-500">Login</a>
                     </li>
                     <li class="md:mx-4">
                         <a href="/signup" class="button-16 in-nav w-button">Sign up</a>

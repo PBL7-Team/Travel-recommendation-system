@@ -94,7 +94,7 @@ THIRD_PARTY_APPS = (
 )
 CUSTOM_APPS = ("api_oauth2",)
 
-LOCAL_APPS = ("api", "api_base", "api_user", "destinations","attraction","chat_history_saver")
+LOCAL_APPS = ("api", "api_base", "api_user", "destinations","attraction","chat_history_saver","social_auth")
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -166,6 +166,23 @@ DATABASES = {
     "tests": db_config("", {"MIRROR": "default"}),
 }
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            join(BASE_DIR, "templates"),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -196,6 +213,12 @@ OAUTH2_PROVIDER_ID_TOKEN_MODEL = "api_oauth2.IDToken"
 OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "api_oauth2.RefreshToken"
 OAUTH2_PROVIDER_GRANT_MODEL =  "api_oauth2.Grant"
 
+
+# GOOGLE CONFIGURE
+GOOGLE_OAUTH2_CLIENT_ID = env.str("DJANGO_GOOGLE_OAUTH2_CLIENT_ID", default="")
+GOOGLE_OAUTH2_CLIENT_SECRET = env.str("DJANGO_GOOGLE_OAUTH2_CLIENT_SECRET", default="")
+GOOGLE_OAUTH2_PROJECT_ID = env.str("DJANGO_GOOGLE_OAUTH2_PROJECT_ID", default="")
+SOCIAL_SECRET = env.str("SOCIAL_SECRET",default="")
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -286,5 +309,7 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env.str(
     "DEFAULT_FROM_EMAIL", default="BVH <noreply@pbl7.com>"
 )
+
+
 
 LOGIN_URL = "/admin/login/"

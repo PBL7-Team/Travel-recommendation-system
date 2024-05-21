@@ -1,10 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
+  ssr: false,
   devtools: { enabled: false },
   modules: [
     '@pinia/nuxt',
+    '@vesp/nuxt-fontawesome'
   ],
+ 
   vite: {
     vue: {
       template: {
@@ -24,5 +27,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  css: ['~/assets/css/main.css'],
+  css: [
+    '~/assets/css/main.css',
+    '@fortawesome/fontawesome-svg-core/styles.css'
+  ],
+  components: true,
 })

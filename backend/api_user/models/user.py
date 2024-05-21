@@ -15,6 +15,8 @@ from django.db import models
 from api_oauth2.managers.user_manager import UserManager
 from common.constants.gender import Genders
 
+AUTH_PROVIDERS = {'facebook': 'facebook', 'google': 'google',
+                  'twitter': 'twitter', 'email': 'email'}
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(
@@ -32,8 +34,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         choices=Genders.GENDERS, default=Genders.Select, max_length=100
     )
     date_joined = models.DateTimeField(default=timezone.now)
+    auth_provider = models.CharField(
+        max_length=255, blank=False,
+        null=False, default=AUTH_PROVIDERS.get('email'))
+    
     USERNAME_FIELD = "email"  # username
-
     objects = UserManager()
 
     class Meta:
