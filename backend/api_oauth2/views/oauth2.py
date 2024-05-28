@@ -24,12 +24,14 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
+    HTTP_403_FORBIDDEN,
     HTTP_406_NOT_ACCEPTABLE,
     HTTP_500_INTERNAL_SERVER_ERROR
 )
 
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action
+from django.contrib.auth import authenticate
 # from ..services import GoogleService
 #from core.settings.base import EMAIL_DOMAIN, LIMIT_DOMAIN
 # from api_user.services import UserService
@@ -205,7 +207,22 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
     @action(detail=False, methods=["post"], url_path="login", permission_classes=[AllowAny], authentication_classes=[])
     def login(self, request, pk=None):
         try:
+            # print(request.POST)
+            # print("post",request.POST.get("username"))
             user_name = request.POST.get("username")
+            password = request.POST.get("password")
+            if not user_name or not password:
+                return Response(
+                    {"error": _("Username and password are required.")},
+                    status=HTTP_404_NOT_FOUND,
+                )
+            user = authenticate(username=user_name, password=password)
+            if user is None:
+                return Response(
+                    {"error": _("Invalid username or password.")},
+                    status=HTTP_404_NOT_FOUND,
+                )    
+            
             user = User.objects.prefetch_related("roles").get(email=user_name)
             # This is not administrator account
             if user.roles is None:
@@ -235,6 +252,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
                 token = AccessToken.objects.get(token=access_token)
                 app_authorized.send(sender=self, request=request, token=token)
         response = HttpResponse(content=body, status=status)
+        print('r',response)
 
         for k, v in headers.items():
             response[k] = v

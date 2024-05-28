@@ -13,6 +13,10 @@ class Attraction(models.Model):
     location = models.JSONField(null=True)
     reviews_time = models.JSONField(null=True)
     
+    class Meta:
+        db_table = "attractions"
+
+    
     def load_from_json(self, json_data):
         datas = json.loads(json_data)
         # print(data)

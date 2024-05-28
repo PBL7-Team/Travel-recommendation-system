@@ -140,7 +140,11 @@
 }
 
 .social-icons{
+    display: flex;
+    flex-direction: row;
     margin: 20px 0;
+    align-items: center;
+    justify-content: center;
 }
 
 .social-icons a{

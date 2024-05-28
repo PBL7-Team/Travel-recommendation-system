@@ -27,3 +27,5 @@ class Role(models.Model):
             return {name: desc for name, desc in all_scopes.items()}
         role_scopes = self.scope.split()
         return {name: desc for name, desc in all_scopes.items() if name in role_scopes}
+
+    

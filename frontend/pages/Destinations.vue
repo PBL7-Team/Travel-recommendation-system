@@ -21,7 +21,7 @@ async function refetch(pageNumber: any) {
 // Function to fetch data from the API
 async function fetchData() {
   try {
-    const response = await fetch(`http://localhost:8000/api/destinations?page=${currentPage.value}`, {
+    const response = await fetch(`http://localhost:8000/api/v1/destinations?page=${currentPage.value}`, {
       method: 'GET',
     });
     if (response.ok) {
