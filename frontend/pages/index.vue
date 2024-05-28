@@ -1,23 +1,26 @@
-<script setup>
+<script lang="ts" setup>
 import Navbar from '@/components/DefaultNavbar.vue'
 import Footer from '@/components/IndexFooter.vue'
 import image from '@/assets/images/travel_bg.jpg'
 import { ref, onMounted, onUnmounted } from 'vue';
-const sentences = [
-  "Bạn có gợi ý địa điểm du lịch nào thú vị ở VN?",
-  // "Tôi muốn biết về văn hóa ẩm thực của Việt Nam. Bạn có thể chia sẻ những đặc sản nổi tiếng không?",
-  // "Tôi muốn tìm hiểu về các lễ hội truyền thống ở Việt Nam. Có gì đặc biệt mà tôi nên tham gia không?",
-];
 
-const typedSentences = ref([]);
+
+
+const sentences = ref<string[]>([
+  'This is the first sentence.',
+  'Here is another sentence.',
+  'This is yet another sentence.'
+]);
+
+const typedSentences = ref<string[]>(Array(sentences.value.length).fill(''));
 let currentState = 'typing';
 
-const typeAndErase = (index) => {
+const typeAndErase = (index: number) => {
   let currentIndex = index;
   let interval = setInterval(() => {
     if (currentState === 'typing') {
-      if (typedSentences.value[currentIndex] !== sentences[currentIndex]) {
-        typedSentences.value[currentIndex] = sentences[currentIndex].slice(0, typedSentences.value[currentIndex].length + 1);
+      if (typedSentences.value[currentIndex] !== sentences.value[currentIndex]) {
+        typedSentences.value[currentIndex] = sentences.value[currentIndex].slice(0, typedSentences.value[currentIndex].length + 1);
       } else {
         currentState = 'erasing';
         clearInterval(interval);
@@ -39,7 +42,7 @@ const typeAndErase = (index) => {
 };
 
 onMounted(() => {
-  sentences.forEach((sentence, index) => {
+  sentences.value.forEach((sentence, index) => {
     typedSentences.value[index] = "";
     setTimeout(() => {
       typeAndErase(index);

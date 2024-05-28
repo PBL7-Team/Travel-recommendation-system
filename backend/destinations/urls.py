@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import re_path, include
 from rest_framework.routers import DefaultRouter
 from .views import DestinationViewSet
 
@@ -7,5 +7,5 @@ router.register(r'destinations', DestinationViewSet)
 
 app_name="destinations"
 urlpatterns = [
-    path('', include(router.urls)),
+    re_path('api/v1/', include(router.urls)),
 ]
