@@ -11,23 +11,14 @@ export const useAuthStore = defineStore('auth', {
     loading: false,
   }),
   actions: {
-    async authenticateUser({ username, password }: UserPayloadInterface) {
+    async login({ username, password }: UserPayloadInterface) {
       console.log(username, password)
-      //   await fetch('http://localhost:8000/api/v1/login', {
-      //       method: 'POST',
-      //       headers: { 'Content-Type': 'application/json' },
-      //       // credentials: 'include',
-      //       body: JSON.stringify({
-      //           username: loginForm.value.email,
-      //           password: loginForm.value.password
-      //       })
-      //   });
       const formData = new FormData();
       formData.append('username', username);
       formData.append('password', password);
       const { data, pending }: any = await useFetch('http://localhost:8000/api/v1/login', {
         method: 'POST',
-        // headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 'Content-Type': 'multipart/form-data' },
         credentials: 'include',
         // body: JSON.stringify({
         //   username: username,

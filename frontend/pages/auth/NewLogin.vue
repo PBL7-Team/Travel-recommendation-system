@@ -2,17 +2,12 @@
 import BaseIcon from '@/components/BaseIcon.vue'
 import { mdiGoogle, mdiFacebook, mdiTwitter } from '@mdi/js'
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
-import { useAuthStore } from '~/store/auth'; // import the auth store we just created
+
+const toast = useToast()
+import { useAuthStore } from '@/stores/auth.store'; // import the auth store we just created
 const router = useRouter();
 
-const { authenticateUser } = useAuthStore(); // use authenticateUser action from  auth store
-
-const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
-
-
-const username = useCookie('username')
-const password = useCookie('password')
-const isRememberMe = ref(false)
+const userStore = useAuthStore()// use authenticateUser action from  auth store
 
 const isActive = ref(false);
 const registerForm = ref({
@@ -22,8 +17,8 @@ const registerForm = ref({
     password: ''
 });
 const loginForm = ref({
-    username: '',
-    password: ''
+    username: 'letrongbach02@gmail.com',
+    password: 'bach12345'
 });
 
 const toggleActive = () => {
@@ -46,26 +41,26 @@ const register = async () => {
     console.log('Register form submitted', registerForm.value);
 };
 
-
 const login = async () => {
     try {
-        console.log('value', loginForm.value)
-        await authenticateUser(loginForm.value); // call authenticateUser and pass the user object
-        // redirect to homepage if user is authenticated
-        if (authenticated) {
-            // router.push('/');
-            // this.$toast.success('Successfully authenticated')
-            // toast.add({ title: 'Successfully authenticated!' })
-            console.log("Success")
-        }
-        else {
-            // this.$toast.global.my_error() //Using custom toast
-            // toast.add({ title: 'Error while authenticating' })
-            // this.$toast.error('Error while authenticating')
-            console.log('Error while authenticating')
+        const result = await userStore.login(loginForm.value.username, loginForm.value.password)
+        if (result?.data) {
+            toast.add({
+                title: 'Login Successfully',
+                // description: 'Invalid username or password, please check again',
+                // icon: 'i-octicon-desktop-download-24',
+                timeout: 1000,
+            })
+            router.push('/')
         }
     } catch (e) {
         console.error(e)
+        toast.add({
+            title: 'Login unsuccessfully',
+            description: 'Invalid username or password, please check again',
+            icon: 'i-octicon-desktop-download-24',
+            timeout: 10000,
+        })
     }
 
 };
@@ -80,6 +75,7 @@ const loginWithGoogle = async () => {
         })
     });
 };
+
 </script>
 <template>
     <div class="body">
@@ -128,20 +124,14 @@ const loginWithGoogle = async () => {
                     <span class="text-red"></span>
                     <input class="text-black" v-model="loginForm.password" type="password" placeholder="Password"
                         autocomplete="current-password">
-                    <div class="flex flex-row mb-4">
-                        <div class="flex-col d-flex justify-content-center">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="isRememberMe" id="rememberMe">
-                                <label class="text-black" for="rememberMe">Remember
-                                    me</label>
-                            </div>
+                    <div class="w-full flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember_me" type="checkbox"
+                                class="bg-white w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                            <label for="remember_me" class="ml-2 text-black text-sm">Remember me</label>
                         </div>
+                        <a href="#" class="text-sm text-blue-600 hover:underline r-0">Forgot password?</a>
                     </div>
-
-
-
-                    <!-- <a href="#">Forget Your Password?</a> -->
-
                     <button>Sign In</button>
                 </form>
             </div>

@@ -207,8 +207,6 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
     @action(detail=False, methods=["post"], url_path="login", permission_classes=[AllowAny], authentication_classes=[])
     def login(self, request, pk=None):
         try:
-            # print(request.POST)
-            # print("post",request.POST.get("username"))
             user_name = request.POST.get("username")
             password = request.POST.get("password")
             if not user_name or not password:
@@ -223,10 +221,10 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
                     status=HTTP_404_NOT_FOUND,
                 )    
             
-            user = User.objects.prefetch_related("roles").get(email=user_name)
-            # This is not administrator account
-            if user.roles is None:
-                raise User.DoesNotExist(message = 'The user is not Admin')
+            # user = User.objects.prefetch_related("roles").get(email=user_name)
+            # # This is not administrator account
+            # if user.roles is None:
+            #     raise User.DoesNotExist(message = 'The user is not Admin')
         except User.DoesNotExist:
             return Response(
                     {"error": _("The user does not exist.")},
