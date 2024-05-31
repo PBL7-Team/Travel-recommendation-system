@@ -7,7 +7,7 @@ from api_user.models.role import Role
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email']
+        fields = ['id','email','first_name','last_name']
         
 class CreateUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):

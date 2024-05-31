@@ -15,6 +15,8 @@ const sentences = ref<string[]>([
 const typedSentences = ref<string[]>(Array(sentences.value.length).fill(''));
 let currentState = 'typing';
 
+
+
 const typeAndErase = (index: number) => {
   let currentIndex = index;
   let interval = setInterval(() => {
@@ -34,7 +36,7 @@ const typeAndErase = (index: number) => {
       } else {
         currentState = 'typing';
         clearInterval(interval);
-        let nextIndex = (currentIndex + 1) % sentences.length;
+        let nextIndex = (currentIndex + 1) % sentences.value.length;
         typeAndErase(nextIndex);
       }
     }

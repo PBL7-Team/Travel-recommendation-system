@@ -2,15 +2,14 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   ssr: false,
-  
   devtools: { enabled: false },
   modules: [
-    // '@nuxt/ui',
+    '@nuxt/ui',
     '@pinia/nuxt',
     '@vesp/nuxt-fontawesome',
     // '@nuxtjs/toast'
   ],
- 
+
   vite: {
     vue: {
       template: {
@@ -31,9 +30,12 @@ export default defineNuxtConfig({
     },
   },
   css: [
-    '~/assets/css/main.css',
+    '~/assets/css/main.css',  
     '@fortawesome/fontawesome-svg-core/styles.css'
   ],
   components: true,
-  
+  colorMode: {
+    preference: 'light'
+  }
+
 })
