@@ -19,10 +19,27 @@ RUN npm install \
 
 FROM python:3.11-slim
 
+# Copy in your requirements file
+COPY requirements /requirements
+
+RUN set -ex \
+    && RUN_DEPS=" \
+    libpcre3 \
+    mime-support \
+    default-libmysqlclient-dev \
+    pkg-config \
+    libgl1 \
+    libssl-dev\
+    gcc\
+    " \
+    && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
+    && apt-get update && apt-get install -y $RUN_DEPS \
+    && pip install --no-cache-dir -r /requirements/production.txt \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements.txt vào image và cài đặt dependencies
-ADD requirements/requirements.txt /requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# ADD requirements/base.txt /requirements.txt
+# RUN pip install --no-cache-dir -r requirements.txt
 
 # # Copy toàn bộ mã nguồn của Django vào image
 # COPY backend /app/
@@ -40,4 +57,4 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Chạy Django server khi container được khởi động
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
