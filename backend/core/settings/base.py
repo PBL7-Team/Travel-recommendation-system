@@ -40,19 +40,47 @@ CUSTOM_BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = (
     os.environ["SECRET_KEY"] if "SECRET_KEY" in os.environ else env("SECRET_KEY")
 )
+
 OIDC_RSA_PRIVATE_KEY_FILE = (
-    os.environ['OIDC_RSA_PRIVATE_KEY_FILE'] if 'OIDC_RSA_PRIVATE_KEY_FILE' in os.environ else env('OIDC_RSA_PRIVATE_KEY_FILE')
+    os.environ["OIDC_RSA_PRIVATE_KEY_FILE"]
+    if "OIDC_RSA_PRIVATE_KEY_FILE" in os.environ
+    else env("OIDC_RSA_PRIVATE_KEY_FILE")
 )
 OIDC_RSA_PRIVATE_KEY_FILE = (
     join(BASE_DIR, OIDC_RSA_PRIVATE_KEY_FILE)
-    if not OIDC_RSA_PRIVATE_KEY_FILE.startswith('/')
+    if not OIDC_RSA_PRIVATE_KEY_FILE.startswith("/")
     else OIDC_RSA_PRIVATE_KEY_FILE
 )
 with open(OIDC_RSA_PRIVATE_KEY_FILE) as f:
     OIDC_RSA_PRIVATE_KEY = f.read()
 
+SERVER_KEY_FILE = (
+    os.environ["SERVER_KEY_FILE"]
+    if "SERVER_KEY_FILE" in os.environ
+    else env("SERVER_KEY_FILE")
+)
+SERVER_KEY_FILE_PATH = (
+    join(CUSTOM_BASE_DIR, SERVER_KEY_FILE)
+    if not SERVER_KEY_FILE.startswith("/")
+    else SERVER_KEY_FILE
+)
+
+DBCA_KEY_FILE = (
+    os.environ["DBCA_KEY_FILE"]
+    if "DBCA_KEY_FILE" in os.environ
+    else env("DBCA_KEY_FILE")
+)
+DBCA_KEY_FILE_PATH = (
+    join(CUSTOM_BASE_DIR, DBCA_KEY_FILE)
+)
+
+print('Path: ',DBCA_KEY_FILE_PATH)
+
+
 JWT_ISSUER = (
-    os.environ['JWT_ISSUER'] if 'JWT_ISSUER' in os.environ else env.str('JWT_ISSUER', 'Amoz')
+    os.environ["JWT_ISSUER"]
+    if "JWT_ISSUER" in os.environ
+    else env.str("JWT_ISSUER", "Amoz")
 )
 
 # # SECURITY WARNING: don't run with debug turned on in production!
@@ -81,11 +109,10 @@ CORS_ALLOW_METHODS = [
 ]
 
 
-
 CORS_ALLOW_HEADERS = list(default_headers)
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    'http://localhost:3000',
+    "http://localhost:3000",
 ]
 
 # Application definition
@@ -178,7 +205,10 @@ def db_config(prefix="", test=None):
             os.environ["DB_PORT"] if "DB_PORT" in os.environ else os.environ("DB_PORT")
         ),
         "TEST": test,
-        "OPTIONS": {"charset": "utf8mb4"},
+        "OPTIONS": {
+            # "charset": "utf8mb4",
+        
+        },
     }
 
 
@@ -244,7 +274,9 @@ OAUTH2_PROVIDER = {
     "DEFAULT_SCOPES": default_scopes,
     "SCOPES_BACKEND_CLASS": "api_oauth2.settings_scopes.SettingsScopes",
     "OAUTH2_VALIDATOR_CLASS": "api_oauth2.oauth_validators.CustomOAuth2Validator",
-    "ACCESS_TOKEN_GENERATOR": signed_token_generator(OIDC_RSA_PRIVATE_KEY, issuer=JWT_ISSUER),
+    "ACCESS_TOKEN_GENERATOR": signed_token_generator(
+        OIDC_RSA_PRIVATE_KEY, issuer=JWT_ISSUER
+    ),
     "REFRESH_TOKEN_GENERATOR": "oauthlib.oauth2.rfc6749.tokens.random_token_generator",
     "ACCESS_TOKEN_EXPIRE_SECONDS": 3600,
     "REFRESH_TOKEN_GRACE_PERIOD_SECONDS": 4000,
