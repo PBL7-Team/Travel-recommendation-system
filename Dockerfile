@@ -54,7 +54,7 @@ RUN python manage.py migrate
 RUN python manage.py collectstatic --noinput
 
 # Expose port 8000 để Django server chạy trên nó
-EXPOSE 8000
+# EXPOSE 8000
 
 # Chạy Django server khi container được khởi động
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
