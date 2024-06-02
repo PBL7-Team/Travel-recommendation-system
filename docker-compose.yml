@@ -11,5 +11,5 @@ services:
 
     env_file:
       - ./docker.env
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
