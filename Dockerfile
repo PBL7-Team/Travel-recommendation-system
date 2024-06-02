@@ -1,5 +1,7 @@
 FROM node:20-alpine AS builder
 
+USER root
+
 # make the 'app' folder the current working directory
 WORKDIR /app
 
