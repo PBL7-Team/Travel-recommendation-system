@@ -84,7 +84,7 @@ JWT_ISSUER = (
 )
 
 # # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG',0)))
+DEBUG = bool(os.environ.get('DEBUG',False))
 API_HOST = env("API_HOST")
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
