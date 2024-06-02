@@ -24,6 +24,12 @@ import LayoutAuthenticated from '@/layouts/authenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import SectionBannerStarOnGitHub from '@/components/SectionBannerStarOnGitHub.vue'
 
+// definePageMeta({
+//   layout: 'authenticated'
+// })
+const layout = "authenticated";
+
+
 const chartData = ref(null)
 
 const fillChartData = () => {
@@ -43,7 +49,7 @@ const transactionBarItems = computed(() => mainStore.history)
 
 <template>
   <div>
-    <LayoutAuthenticated>
+    <NuxtLayout :name="layout">
       <SectionMain>
         <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Overview" main>
           <BaseButton href="https://github.com/Bach2k2/PBL7-TravelApp" target="_blank" :icon="mdiGithub"
@@ -93,6 +99,6 @@ const transactionBarItems = computed(() => mainStore.history)
           <TableSampleClients />
         </CardBox>
       </SectionMain>
-    </LayoutAuthenticated>
+    </NuxtLayout>
   </div>
 </template>

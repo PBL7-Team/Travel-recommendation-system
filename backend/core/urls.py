@@ -31,4 +31,5 @@ urlpatterns = [
     path('', include("destinations.urls", namespace="destinations")),
     path('', include("attraction.urls", namespace="attraction")), 
     path('', include("chat_history_saver.urls", namespace="chat_history_saver")),
+    path('', include("scrapy_api.urls", namespace="scrapy_api")),
 ]
