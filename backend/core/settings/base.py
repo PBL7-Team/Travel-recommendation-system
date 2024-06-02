@@ -137,7 +137,7 @@ THIRD_PARTY_APPS = (
     "rest_framework",
     "rest_framework_api_key",
     "oauth2_provider",
-    "corsheaders",
+    # "corsheaders",
 )
 CUSTOM_APPS = ("api_oauth2",)
 
@@ -157,7 +157,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",  # Notice the order
+    # "corsheaders.middleware.CorsMiddleware",  # Notice the order
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
