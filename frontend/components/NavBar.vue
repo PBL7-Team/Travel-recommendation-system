@@ -41,6 +41,10 @@ const isMenuNavBarActive = ref(false)
         :class="[isMenuNavBarActive ? 'block' : 'hidden']">
         <NavBarMenuList :menu="menu" @menu-click="menuClick" />
       </div>
+      <div>
+        <a href="/auth/newlogin" class="cta inline-block bg-blue-600 text-white hover:bg-blue-500 px-3 py-2 rounded">Get
+          Started</a>
+      </div>
     </div>
   </nav>
 </template>

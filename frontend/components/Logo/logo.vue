@@ -1,7 +1,9 @@
 <script setup>
 </script>
 <template>
-    <img class="img" src="@/assets/images/team_logo1.png" alt="Logo" />
+    <a href="/">
+        <img class="img" src="@/assets/images/team_logo1.png" alt="Logo" />
+    </a>
 </template>
 <style lang="scss" scoped>
 img {

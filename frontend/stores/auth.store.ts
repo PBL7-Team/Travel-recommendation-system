@@ -66,6 +66,7 @@ export const useAuthStore = defineStore({
             try{
                 let res = await axios.get(`${baseUrl}/users/${userId}`)
                 if (res.status==200){
+                    // console.log
                     return res.data
                 }else{
                     

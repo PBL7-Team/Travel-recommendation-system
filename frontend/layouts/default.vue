@@ -6,6 +6,9 @@ import menuNavBar from '~/configs/menuNavBar.js'
 definePageMeta({
   middleware: 'auth'
 })
+import { useAuthStore } from '@/stores/auth.store';
+const userStore = useAuthStore()
+const { user: authUser } = storeToRefs(userStore);
 
 // const layoutAsidePadding = 'xl:pl-60'
 
@@ -23,11 +26,11 @@ router.beforeEach(() => {
 
 </script>
 <template>
-
+  <!-- <Navbar /> -->
   <div :class="{
     'overflow-hidden lg:overflow-visible': isAsideMobileExpanded
   }">
-    <!-- <Navbar /> -->
+
     <div
       class="pt-14 min-h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100">
 
@@ -43,6 +46,7 @@ router.beforeEach(() => {
         <!-- <NavBarItemPlain use-margin>
           <FormControl placeholder="Search (ctrl+k)" ctrl-k-focus transparent borderless />
         </NavBarItemPlain> -->
+
       </NavBar>
       <slot />
       <Footer />
