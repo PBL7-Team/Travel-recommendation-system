@@ -59,4 +59,4 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8080
 
 #Chạy Django server khi container được khởi động
-CMD ["python", "manage.py", "runserver"]
+CMD ["python", "manage.py", "runserver","0.0.0.0:8080"]
