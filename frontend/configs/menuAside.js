@@ -11,7 +11,8 @@ import {
   mdiResponsive,
   mdiPalette,
   mdiReact,
-  mdiMapMarker
+  mdiMapMarker,
+  mdiWeatherCloudyClock
 } from '@mdi/js'
 
 export default [
@@ -76,6 +77,11 @@ export default [
         label: 'Item Two'
       }
     ]
+  },
+  {
+    to: '/crawl',
+    label: 'Scrape schedule',
+    icon: mdiWeatherCloudyClock
   },
   // {
   //   href: 'https://github.com/justboil/admin-one-vue-tailwind',
