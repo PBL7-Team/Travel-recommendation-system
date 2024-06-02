@@ -74,9 +74,6 @@ DBCA_KEY_FILE_PATH = (
     join(CUSTOM_BASE_DIR, DBCA_KEY_FILE)
 )
 
-print('Path: ',DBCA_KEY_FILE_PATH)
-
-
 JWT_ISSUER = (
     os.environ["JWT_ISSUER"]
     if "JWT_ISSUER" in os.environ
@@ -84,12 +81,13 @@ JWT_ISSUER = (
 )
 
 # # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DEBUG',False))
+DEBUG = env.bool('DEBUG',default=False)
 API_HOST = env("API_HOST")
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
     default=[API_HOST, "api", "localhost", "host.docker.internal"],
 )
+
 # ALLOWED_HOSTS =['4.145.112.182','localhost','travel-app.southeastasia.cloudapp.azure.com','*']
 #ALLOWED_HOSTS = ["4.145.113.250",'localhost','travel-app.southeastasia.cloudapp.azure.com','4.145.112.182']
 CORS_ORIGIN_ALLOW_ALL = True
