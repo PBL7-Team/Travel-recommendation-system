@@ -25,7 +25,7 @@ export default [
   {
     // icon: mdiMenu,
     label: 'Resources',
-    href: '/',
+    href: '/dashboard',
   },
   {
     // icon: mdiMenu,

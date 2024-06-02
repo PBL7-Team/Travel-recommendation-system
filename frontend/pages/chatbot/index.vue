@@ -1,6 +1,15 @@
 <script setup>
 import Navbar from '@/components/DefaultNavbar.vue'
 import Footer from '@/components/IndexFooter.vue'
+let baseUrl = `${import.meta.env.VITE_API_URL}`;
+import { useAuthStore } from '@/stores/auth.store';
+const userStore = useAuthStore()// use authenticateUser action from  auth store
+const { user: authUser } = storeToRefs(userStore);
+
+// onMounted(()=>{
+//     console.log('authUser',authUser)
+// })
+
 const messages = ref([
     {
         role: 'AI',
@@ -35,10 +44,11 @@ const sendPrompt = async () => {
 
     const lastMessage = messages.value[messages.value.length - 1].message;
     console.log(lastMessage)
-    const res = await fetch(`http://localhost:8000/api/v1/chat-history`, {
+    const res = await fetch(`${baseUrl}/chat-history`, {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            'user': '4bbec010100843a4b10c5098710e25f3',
+            // 'user': `${authUser.id}`,
+            'user': 'a54579edc369439abc090f45451301dd',
             'chat_message': lastMessage
         }),
         method: 'post'
@@ -46,6 +56,7 @@ const sendPrompt = async () => {
 
     if (res.status === 200 || res.status === 201) {
         const response = await res.json();
+        console.log('res', response)
         messages.value.push({
             role: 'AI',
             message: response?.system_answer
@@ -60,6 +71,10 @@ const sendPrompt = async () => {
     loading.value = false;
     scrollToEnd();
 };
+function processMessage(message) {
+    // Replace \n with <br> tags
+    return message.replace(/\n/g, '<br>');
+}
 </script>
 
 <template>
@@ -78,12 +93,14 @@ const sendPrompt = async () => {
                         <div v-for="(message, i) in messages" :key="i" class="flex flex-col p-4">
                             <div v-if="message.role === 'AI'" class="pr-8 mr-auto">
                                 <div class="p-2 mt-1 text-sm text-gray-700 bg-gray-200 rounded-lg text-smp-2">
-                                    {{ message.message }}
+                                    <!-- {{ message.message }} -->
+                                    <span v-html="processMessage(message.message)"></span>
                                 </div>
                             </div>
                             <div v-else class="pl-8 ml-auto">
                                 <div class="p-2 mt-1 text-sm text-white bg-blue-400 rounded-lg">
-                                    {{ message.message }}
+                                    <!-- {{ message.message }} -->
+                                    <span v-html="processMessage(message.message)"></span>
                                 </div>
                             </div>
                         </div>

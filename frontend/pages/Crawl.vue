@@ -2,10 +2,11 @@
 import LayoutAuthenticated from '@/layouts/authenticated.vue'
 const toast = useToast()
 import axios from 'axios'
+let baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 const startCrawl = async () => {
     try {
-        const response = await axios.get('http://localhost:8000/api/v1/start-crawl')
+        const response = await axios.get(`${baseUrl}/start-crawl`)
         toast.add({
             title: 'The data is crawling',
             description: response.data.message || 'Wait for a few minutes',
@@ -22,7 +23,7 @@ const startCrawl = async () => {
 
 const calculateScore = async () => {
     try {
-        const response = await axios.get('http://localhost:8000/api/v1/sentiment-calculate')
+        const response = await axios.get(`${baseUrl}/sentiment-calculate`)
         toast.add({
             title: 'Calculation started',
             description: response.data.message || 'The sentiment scoring is in progress.',
@@ -39,7 +40,7 @@ const calculateScore = async () => {
 
 const getCrawlInfo = async () => {
     try {
-        const response = await axios.get('http://localhost:8000/api/v1/get-crawl-info')
+        const response = await axios.get(`${baseUrl}/get-crawl-info`)
         toast.add({
             title: 'Fetching Crawl Info',
             description: response.data.message || 'Fetching the latest crawl information.',

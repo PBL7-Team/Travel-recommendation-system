@@ -33,12 +33,13 @@ class ChatHistoryViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         chat_message = serializer.validated_data.get('chat_message')
-        url = 'https://294e-2402-800-6294-ad48-954c-73b6-bb41-8951.ngrok-free.app/webhooks/rest/webhook'  # Replace with your webhook URL
+        url = 'http://4.145.112.182:5005/webhooks/rest/webhook'  # Replace with your webhook URL
 
         try:
             response_data = call_rasa(user.username, chat_message, url)
-            # print(response_data)
+            print(response_data)
             system_answer = response_data[0].get('text')
+            print(system_answer)
             serializer.save(system_answer=system_answer)
             return JsonResponse({
                 'data': response_data,
