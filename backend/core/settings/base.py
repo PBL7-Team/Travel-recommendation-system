@@ -84,8 +84,13 @@ JWT_ISSUER = (
 )
 
 # # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS =['4.145.112.182','localhost','travel-app.southeastasia.cloudapp.azure.com','*']
+DEBUG = bool(int(os.environ.get('DEBUG',0)))
+API_HOST = env("API_HOST")
+ALLOWED_HOSTS = env.list(
+    "DJANGO_ALLOWED_HOSTS",
+    default=[API_HOST, "api", "localhost", "host.docker.internal"],
+)
+# ALLOWED_HOSTS =['4.145.112.182','localhost','travel-app.southeastasia.cloudapp.azure.com','*']
 #ALLOWED_HOSTS = ["4.145.113.250",'localhost','travel-app.southeastasia.cloudapp.azure.com','4.145.112.182']
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -153,7 +158,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",  # Notice the order
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
