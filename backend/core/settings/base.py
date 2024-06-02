@@ -85,7 +85,7 @@ JWT_ISSUER = (
 
 # # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS =['*']
+ALLOWED_HOSTS =['4.145.112.182','localhost','travel-app.southeastasia.cloudapp.azure.com']
 #ALLOWED_HOSTS = ["4.145.113.250",'localhost','travel-app.southeastasia.cloudapp.azure.com','4.145.112.182']
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -97,7 +97,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5173",
     "http://localhost:3001",
-    "http://127.0.0.1:3001",
+    "http://127.0.0.1:3001", 
+    "http://4.145.112.182:8000",
 ]
 
 CORS_ALLOW_METHODS = [
