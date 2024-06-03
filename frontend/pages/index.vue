@@ -8,6 +8,10 @@ definePageMeta({
   layout: 'default'
 })
 
+// definePageMeta({
+//     middleware: 'auth' 
+// })
+
 
 const sentences = ref<string[]>([
   'This is the first sentence.',

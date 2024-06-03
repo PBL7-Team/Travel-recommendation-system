@@ -73,7 +73,14 @@ const sendPrompt = async () => {
 };
 function processMessage(message) {
     // Replace \n with <br> tags
-    return message.replace(/\n/g, '<br>');
+    if(message)
+    {
+        return message.replace(/\n/g, '<br>');
+    }
+       
+    else{
+        return message
+    }
 }
 </script>
 
@@ -131,7 +138,7 @@ function processMessage(message) {
                     <span>Built with</span>
                     <a href="https://openai.com/blog/gpt-3-apps"
                         class="flex items-center mx-1 font-medium underline transition-colors underline-offset-4 hover:text-black/70">
-                        <p>gpt-3</p>
+                        <p>LLM</p>
                     </a>
                     <span>and</span>
                     <a href="https://nuxt.com/docs"

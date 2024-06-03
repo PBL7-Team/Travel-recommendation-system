@@ -36,6 +36,8 @@ export const useAuthStore = defineStore({
                     this.$state.isLoggedIn = true;
                     const { sub, iat, exp, nbf, scope } = decodeToken(this.$state.access_token);
                     let format_sub= sub.replace("-",'')
+                    const token = useCookie('token'); // useCookie new hook in nuxt 3
+                    token.value = this.$state.access_token
                     this.getUserById(format_sub).then(
                         (data)=>{
                             this.$state.user=data

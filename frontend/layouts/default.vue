@@ -6,10 +6,15 @@ import menuNavBar from '~/configs/menuNavBar.js'
 definePageMeta({
   middleware: 'auth'
 })
+
 import { useAuthStore } from '@/stores/auth.store';
 const userStore = useAuthStore()
 const { user: authUser } = storeToRefs(userStore);
+const { isLoggedIn } = storeToRefs(useAuthStore());
 
+onMounted(()=>{
+  console.log('login?:',isLoggedIn)
+})
 // const layoutAsidePadding = 'xl:pl-60'
 
 const darkModeStore = useDarkModeStore()
