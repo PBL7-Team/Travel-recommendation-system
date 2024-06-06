@@ -31,4 +31,7 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 #Chạy Django server khi container được khởi động
-CMD ["python", "manage.py", "runserver_plus", "--cert-file", "cert.pem", "--key-file", "key.pem"]
+# CMD ["python", "manage.py", "runserver_plus", "--cert-file", "cert.pem", "--key-file", "key.pem"]
+
+# Run the application
+CMD ["gunicorn", "--chdir", "myproject", "--bind", ":8000", "myproject.wsgi:application"]
