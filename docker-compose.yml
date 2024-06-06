@@ -3,7 +3,9 @@ version: '3.1'
 services:
 
   web:
-    build: .
+    build:
+      context: .
+    container_name: PBL7-backend
     restart: always
     ports:
       - 8000:8000
