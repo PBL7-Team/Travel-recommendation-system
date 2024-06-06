@@ -21,11 +21,11 @@ from django.conf.urls import include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/v1/o/", include("api.urls", namespace="api")),
+    # path("api/v1/o/", include("api.urls", namespace="api")),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+    path("api/v1/o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     path('', include("api_oauth2.urls")),
-    path('api/v1/', include("social_auth.urls")),
+    path('', include("social_auth.urls")),
     
     path('', include("api_user.urls", namespace="users")),
     path('', include("destinations.urls", namespace="destinations")),

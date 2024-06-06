@@ -62,13 +62,39 @@ export const useAuthStore = defineStore({
                 console.error("Login error:", error);
             }
         },
-        async loginByGoogle() {
-            const result = await axios.post(`${baseUrl}/google/`, {
+        async loginByGoogle(credential: any) {
+            const formData = new FormData();
+            // formData.append("credential", credential);
+            formData.append("access_token", credential);
+            const result = await axios.post(`${baseUrl}/google/login/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log(result)
+            if (result.status == 200) {
+                this.$state.access_token = result.data.access_token;
+                this.$state.refresh_token = result.data.refresh_token;
+                this.$state.isLoggedIn = true;
+                const { sub, iat, exp, nbf, scope } = decodeToken(this.$state.access_token);
+                let format_sub = sub.replace("-", '')
+                const currentTime = new Date();
+                this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
+                const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
+                token.value = this.$state.access_token
+                const userData = await this.getUserById(format_sub);
+                this.$state.user = userData;
+
+                // Persist the state to localStorage
+                // Save tokens and expiration time to localStorage
+                localStorage.setItem('access_token', this.$state.access_token);
+                localStorage.setItem('refresh_token', this.$state.refresh_token);
+                localStorage.setItem('expired_time', this.$state.expired_time);
+                localStorage.setItem('user', JSON.stringify(this.$state.user));
+            } else {
+                console.log('error status', result.status)
+            }
+            console.log(result.data)
+
             return result
 
         },

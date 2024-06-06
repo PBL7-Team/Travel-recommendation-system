@@ -12,6 +12,7 @@ from oauth2_provider.views.mixins import OAuthLibMixin
 from rest_framework.response import Response
 from django.utils.translation import gettext as _
 from api_user.serializers import CreateUserSerializer
+from api_user.services.user import UserService
 from api_oauth2.services import OAuth2Service
 from core.settings.base import (
     DEFAULT_CLIENT_ID,
@@ -43,6 +44,8 @@ from django.contrib.auth import get_user_model
 import requests
 from oauth2_provider.contrib.rest_framework import TokenMatchesOASRequirements
 
+from ..services import GoogleService
+from core.settings.base import EMAIL_DOMAIN, LIMIT_DOMAIN, GOOGLE_CLIENT_ID
 
 User = get_user_model()
 AccessToken = get_access_token_model()
@@ -153,7 +156,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
 
     def get_permissions(self):
         """Returns the permission based on the type of action"""
-        if self.action in ["login", "register", "refresh_token"]:
+        if self.action in ["login", "register", "refresh_token","loginWithGoogle"]:
             return [AllowAny()]
         return [IsAuthenticated()]
 
@@ -291,7 +294,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
         permission_classes=[AllowAny],
         authentication_classes=[],
     )
-    def refeshToken(self, request):
+    def refreshToken(self, request):
         request.POST._mutable = True
         refresh_token = request.POST.get("refresh_token")
         if not refresh_token or refresh_token == "null":
@@ -356,3 +359,64 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             )
 
         return Response({"message": "logout success!"}, status=HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="login/google",
+        permission_classes=[AllowAny],
+    )
+    def loginWithGoogle(self, request):
+        request.POST._mutable = True
+        credential = request.POST.get("credential")
+        print(credential)
+        user_data = GoogleService.google_get_user_profile(credential)
+        if not user_data:
+            return Response(
+                {"Token": "The token is either invalid or has expired"},
+                status=HTTP_401_UNAUTHORIZED,
+            )
+        profile_data = {
+            "sub": user_data["sub"],
+            "email": user_data["email"],
+            "first_name": user_data["given_name"],
+            "last_name": user_data["family_name"],
+            "iss": user_data["iss"],
+        }
+        if LIMIT_DOMAIN is False or (
+            LIMIT_DOMAIN is True and user_data["email"].split("@")[1] == EMAIL_DOMAIN
+        ):
+            user, created = UserService.get_or_create_user(profile_data)
+            if created:
+                # Xử lý khi người dùng được tạo mới (nếu cần)
+                print("hi")
+                pass
+
+            password = credential
+
+            request.POST.update(
+                {
+                    "grant_type": "public",
+                    "grant_type": "password",
+                    "client_id": DEFAULT_CLIENT_ID,
+                    "client_secret": DEFAULT_CLIENT_SECRET,
+                    "username": user.email,
+                    "password": password,
+                }
+            )
+            url, headers, body, status = self.create_token_response(request)
+            if status == 200:
+                access_token = json.loads(body).get("access_token")
+                if access_token is not None:
+                    token = get_access_token_model().objects.get(token=access_token)
+                    app_authorized.send(sender=self, request=request, token=token)
+            response = HttpResponse(content=body, status=status)
+
+            for k, v in headers.items():
+                response[k] = v
+            return response
+
+        return Response(
+            {"Unauthorized": "The domain were blocked."},
+            status=HTTP_401_UNAUTHORIZED,
+        )

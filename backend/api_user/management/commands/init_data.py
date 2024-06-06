@@ -73,6 +73,11 @@ class Command(BaseCommand):
 
     @classmethod
     def create_users(cls):
+        role, created = Role.objects.get_or_create(
+            name="User",
+            description="Just use the limit access",
+            scope="__all__",
+        )
         users_data = [
             {
                 "email": "ncanh2806@gmail.com",
@@ -81,13 +86,13 @@ class Command(BaseCommand):
                 "password": "password123",
                 "gender": Genders.MALE,
             },
-            {
-                "email": "benphantom102@gmail.com",
-                "first_name": "Bách",
-                "last_name": "Lê Trọng",
-                "password": "password123",
-                "gender": Genders.FEMALE,
-            },
+            # {
+            #     "email": "benphantom102@gmail.com",
+            #     "first_name": "Bách",
+            #     "last_name": "Lê Trọng",
+            #     "password": "password123",
+            #     "gender": Genders.FEMALE,
+            # },
             {
                 "email": "nguyenhoang29minh03@gmail.com",
                 "first_name": "Hoàng",
@@ -113,7 +118,7 @@ class Command(BaseCommand):
 
         for user_data in users_data:
             if not User.objects.filter(email=user_data["email"]).exists():
-                user = User(
+                user = User.objects.create(
                     email=user_data["email"],
                     first_name=user_data["first_name"],
                     last_name=user_data["last_name"],
@@ -121,6 +126,7 @@ class Command(BaseCommand):
                     is_active=True,
                     is_staff=True,
                 )
+                user.roles.add(role)
                 user.set_password(user_data["password"])
                 user.save()
                 print(f"Successfully created user {user.email}")

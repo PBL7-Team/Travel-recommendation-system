@@ -26,6 +26,7 @@
     "chart.js": "^4.4.2",
     "numeral": "^2.0.6",
     "nuxt": "^3.11.2",
+    "nuxt-vue3-google-signin": "^0.0.11",
     "pinia": "^2.1.7",
     "sass": "^1.75.0",
     "sass-loader": "^14.2.1",
