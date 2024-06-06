@@ -9,6 +9,16 @@ services:
     restart: always
     ports:
       - 8000:8000
-
     env_file:
       - ./docker.env
+
+  ngrok:
+    image: wernight/ngrok
+    container_name: ngrok
+    restart: always
+    ports:
+      - 4040:4040
+    environment:
+      NGROK_CONFIG: /ngrok/ngrok.yml
+    volumes:
+      - ./ngrok.yml:/ngrok/ngrok.yml
