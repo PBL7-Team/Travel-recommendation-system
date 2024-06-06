@@ -4,3 +4,4 @@ tunnels:
   web:
     proto: http
     addr: web:8000
+    domain: fair-barnacle-genuinely.ngrok-free.app
