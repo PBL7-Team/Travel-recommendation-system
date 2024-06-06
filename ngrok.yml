@@ -1,4 +1,5 @@
 authtoken: 2QjcBSc1a8mdClgelHJaZXiXeh1_6S4DBgVfMRyHj8eQPCrS
+web_addr: 0.0.0.0:4040
 version: "2"
 tunnels:
   web:
