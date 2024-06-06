@@ -17,7 +17,7 @@ from core.settings.base import (
     DEFAULT_CLIENT_ID,
     DEFAULT_CLIENT_SECRET,
     COMMON_CLIENT_ID,
-    COMMON_CLIENT_SECRET
+    COMMON_CLIENT_SECRET,
 )
 from rest_framework.status import (
     HTTP_200_OK,
@@ -26,20 +26,23 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_403_FORBIDDEN,
     HTTP_406_NOT_ACCEPTABLE,
-    HTTP_500_INTERNAL_SERVER_ERROR
+    HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate
+
 # from ..services import GoogleService
-#from core.settings.base import EMAIL_DOMAIN, LIMIT_DOMAIN
+# from core.settings.base import EMAIL_DOMAIN, LIMIT_DOMAIN
 # from api_user.services import UserService
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 import requests
+from oauth2_provider.contrib.rest_framework import TokenMatchesOASRequirements
+
 
 User = get_user_model()
 AccessToken = get_access_token_model()
@@ -140,31 +143,46 @@ AccessToken = get_access_token_model()
 
 #         return Response({"message": "logout success!"}, status=HTTP_200_OK)
 
+
 class Oauth2ViewSet(OAuthLibMixin, ViewSet):
     """
     The endpoints for login, refresh token and logout
     """
 
-    @action(detail=False, methods=["post"], url_path="register", permission_classes=[AllowAny], authentication_classes=[])
-    def register(self,request):
-        '''
+    required_alternate_scopes = ["read", "write"]  # Define your required scopes here
+
+    def get_permissions(self):
+        """Returns the permission based on the type of action"""
+        if self.action in ["login", "register", "refresh_token"]:
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="register",
+        permission_classes=[AllowAny],
+        authentication_classes=[],
+    )
+    def register(self, request):
+        """
         Registers user to the server. Input should be in the format:
         {"username": "username", "password": "1234abcd"}
-        '''
-        # Put the data from the request into the serializer 
-        serializer = CreateUserSerializer(data=request.data) 
+        """
+        # Put the data from the request into the serializer
+        serializer = CreateUserSerializer(data=request.data)
         # Validate the data
         if serializer.is_valid():
             # If it is valid, save the data (creates a user).
-            user=serializer.save() 
+            user = serializer.save()
             # Then we get a token for the created user.
-            # This could be done differentley 
-           
-            # r = requests.post('http://127.0.0.1:8000/o/token/', 
+            # This could be done differentley
+
+            # r = requests.post('http://127.0.0.1:8000/o/token/',
             #     data={
             #         'grant_type': 'password',
             #         'username': request.data['email'],
-            #         'password': request.data['password'],                   
+            #         'password': request.data['password'],
             #         'client_id': DEFAULT_CLIENT_ID,
             #         'client_secret': DEFAULT_CLIENT_ID,
             #     },
@@ -175,7 +193,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             #         "grant_type": "password",
             #         "client_type": "confidential",
             #         'username': request.data['email'],
-            #         'password': request.data['password'],   
+            #         'password': request.data['password'],
             #         "client_id": DEFAULT_CLIENT_ID,
             #         "client_secret": DEFAULT_CLIENT_SECRET,
             #        # "scope": list_to_scope(scopes)
@@ -192,19 +210,29 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             # for k, v in headers.items():
             #     response[k] = v
             # return response
-            
+
             # Send welcome email
             try:
-                OAuth2Service.send_verify_email(request,user)
-                return Response({"message": _("The invitation have been sent.")}, status=HTTP_200_OK)
+                OAuth2Service.send_verify_email(request, user)
+                return Response(
+                    {"message": _("The invitation have been sent.")}, status=HTTP_200_OK
+                )
             except Exception as e:
                 print(e)
-                return Response({"message": _("There is an error occur.")}, status=HTTP_500_INTERNAL_SERVER_ERROR)
-            
+                return Response(
+                    {"message": _("There is an error occur.")},
+                    status=HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
         return Response(serializer.errors, status=HTTP_401_UNAUTHORIZED)
-    
-    
-    @action(detail=False, methods=["post"], url_path="login", permission_classes=[AllowAny], authentication_classes=[])
+
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="login",
+        permission_classes=[AllowAny],
+        authentication_classes=[],
+    )
     def login(self, request, pk=None):
         try:
             user_name = request.POST.get("username")
@@ -219,18 +247,18 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
                 return Response(
                     {"error": _("Invalid username or password.")},
                     status=HTTP_404_NOT_FOUND,
-                )    
-            
+                )
+
             # user = User.objects.prefetch_related("roles").get(email=user_name)
             # # This is not administrator account
             # if user.roles is None:
             #     raise User.DoesNotExist(message = 'The user is not Admin')
         except User.DoesNotExist:
             return Response(
-                    {"error": _("The user does not exist.")},
-                    status=HTTP_404_NOT_FOUND,
-                )
-        scopes = set()  
+                {"error": _("The user does not exist.")},
+                status=HTTP_404_NOT_FOUND,
+            )
+        scopes = set()
         for role in user.roles.all():
             scopes = scopes.union(set(role.scopes.keys()))
         request.POST._mutable = True
@@ -240,7 +268,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
                 "client_type": "confidential",
                 "client_id": DEFAULT_CLIENT_ID,
                 "client_secret": DEFAULT_CLIENT_SECRET,
-                "scope": list_to_scope(scopes)
+                "scope": list_to_scope(scopes),
             }
         )
         url, headers, body, status = self.create_token_response(request)
@@ -250,18 +278,23 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
                 token = AccessToken.objects.get(token=access_token)
                 app_authorized.send(sender=self, request=request, token=token)
         response = HttpResponse(content=body, status=status)
-        print('r',response)
+        print("r", response)
 
         for k, v in headers.items():
             response[k] = v
         return response
 
-
-    @action(detail=False, methods=["post"], url_path="refresh-token", permission_classes=[AllowAny], authentication_classes=[])
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="refresh-token",
+        permission_classes=[AllowAny],
+        authentication_classes=[],
+    )
     def refeshToken(self, request):
         request.POST._mutable = True
-        refresh_token =  request.POST.get("refresh_token")
-        if not refresh_token or refresh_token == 'null':
+        refresh_token = request.POST.get("refresh_token")
+        if not refresh_token or refresh_token == "null":
             return Response(
                 {"error": _("Invalid token")},
                 status=HTTP_406_NOT_ACCEPTABLE,
@@ -278,7 +311,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
         if status == 200:
             access_token = json.loads(body).get("access_token")
             if access_token is not None:
-                token =AccessToken.objects.get(token=access_token)
+                token = AccessToken.objects.get(token=access_token)
                 app_authorized.send(sender=self, request=request, token=token)
         response = HttpResponse(content=body, status=status)
 

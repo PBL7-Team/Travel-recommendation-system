@@ -47,8 +47,6 @@ const login = async () => {
         if (result?.data) {
             toast.add({
                 title: 'Login Successfully',
-                // description: 'Invalid username or password, please check again',
-                // icon: 'i-octicon-desktop-download-24',
                 timeout: 1000,
             })
             router.push('/')
@@ -65,15 +63,14 @@ const login = async () => {
 
 };
 const loginWithGoogle = async () => {
-    await fetch('http://localhost:8000/api/v1/login', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        credentials: 'include', // Để gửi cookies, authentication headers
-        body: JSON.stringify({
-            username: loginForm.value.username,
-            password: loginForm.value.password
+    const result = await userStore.loginByGoogle()
+    if (result?.data) {
+        toast.add({
+            title: 'Login Successfully',
+            timeout: 1000,
         })
-    });
+        router.push('/')
+    }
 };
 
 </script>
@@ -84,7 +81,7 @@ const loginWithGoogle = async () => {
                 <form @submit.prevent="register">
                     <h1 class="text-xl text-black">Create Account</h1>
                     <div class="social-icons">
-                        <a href="#" class="icon">
+                        <a @click="loginWithGoogle" href="#" class="icon">
                             <BaseIcon :path="mdiGoogle" size="24" />
                         </a>
                         <a href="#" class="icon">
