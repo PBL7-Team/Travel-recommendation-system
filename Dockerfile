@@ -16,7 +16,7 @@ RUN set -ex \
     " \
     && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
     && apt-get update && apt-get install -y $RUN_DEPS \
-    && pip install --no-cache-dir -r /requirements/requirements.txt \
+    && pip install --no-cache-dir -r /requirements/production.txt \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /code/
@@ -28,4 +28,4 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--chdir", "myproject", "--bind", ":8000", "myproject.wsgi:application"]
+CMD ["gunicorn", "--chdir", "backend", "--bind", ":8000", "backend.wsgi:application"]
