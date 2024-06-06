@@ -16,7 +16,7 @@ RUN set -ex \
     " \
     && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
     && apt-get update && apt-get install -y $RUN_DEPS \
-    && pip install --no-cache-dir -r /requirements/production.txt \
+    && pip install --no-cache-dir -r /requirements/requirements.txt \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /code/
