@@ -1,18 +1,6 @@
 version: '3.1'
 
 services:
-  ngrok:
-    image: wernight/ngrok
-    container_name: ngrok
-    restart: always
-    ports:
-      - 4040:4040
-    environment:
-      NGROK_CONFIG: /ngrok/ngrok.yml
-    volumes:
-      - ./ngrok.yml:/ngrok/ngrok.yml
-    depends_on:
-      - web
 
   web:
     build:
@@ -23,3 +11,13 @@ services:
       - 8000:8000
     env_file:
       - ./docker.env
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    restart: always
+    command: ngrok http web:8000
+    environment:
+      - NGROK_AUTHTOKEN=2QjcBSc1a8mdClgelHJaZXiXeh1_6S4DBgVfMRyHj8eQPCrS
+    ports:
+      - 4040:4040
