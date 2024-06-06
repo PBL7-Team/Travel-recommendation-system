@@ -1,0 +1,8 @@
+authtoken: 2hV2ShD4AqMNUw6fezwwVTx44cK_4mPJ6YUR6qYJfg6GUyQvp
+web_addr: 0.0.0.0:4040
+version: "2"
+tunnels:
+  web:
+    proto: http
+    addr: web:8000
+

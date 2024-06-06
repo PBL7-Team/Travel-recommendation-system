@@ -15,9 +15,9 @@ services:
   ngrok:
     image: ngrok/ngrok:latest
     container_name: ngrok
-    restart: always
+    restart: unless-stopped
     command: ngrok http web:8000
     environment:
-      - NGROK_AUTHTOKEN=2QjcBSc1a8mdClgelHJaZXiXeh1_6S4DBgVfMRyHj8eQPCrS
+      - NGROK_AUTHTOKEN=2hV2ShD4AqMNUw6fezwwVTx44cK_4mPJ6YUR6qYJfg6GUyQvp
     ports:
       - 4040:4040
