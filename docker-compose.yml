@@ -1,17 +1,6 @@
 version: '3.1'
 
 services:
-
-  web:
-    build:
-      context: .
-    container_name: PBL7-backend
-    restart: always
-    ports:
-      - 8000:8000
-    env_file:
-      - ./docker.env
-
   ngrok:
     image: wernight/ngrok
     container_name: ngrok
@@ -22,3 +11,15 @@ services:
       NGROK_CONFIG: /ngrok/ngrok.yml
     volumes:
       - ./ngrok.yml:/ngrok/ngrok.yml
+    depends_on:
+      - web
+
+  web:
+    build:
+      context: .
+    container_name: PBL7-backend
+    restart: always
+    ports:
+      - 8000:8000
+    env_file:
+      - ./docker.env
