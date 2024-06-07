@@ -9,6 +9,10 @@ const props = defineProps({
         type: Array,
         required: true
     },
+    headers: {
+        type: Array,
+        required: true
+    },
     totalPages: {
         type: Number,
         required: true
@@ -21,9 +25,19 @@ const props = defineProps({
 
 const searchQuery = ref('')
 
+// const filterItems = computed(() => {
+//     if (searchQuery !== '') {
+//         return props.items.filter(item => item.name.includes(searchQuery.value))
+//     }
+//     return props.items
+// })
 const filterItems = computed(() => {
-    if (searchQuery !== '') {
-        return props.items.filter(item => item.name.includes(searchQuery.value))
+    if (searchQuery.value !== '') {
+        return props.items.filter(item =>
+            props.headers.some(header =>
+                item[header.key]?.toString().toLowerCase().includes(searchQuery.value.toLowerCase())
+            )
+        )
     }
     return props.items
 })
@@ -41,12 +55,7 @@ const handleSearch = (search) => {
         <table class="w-full">
             <thead class="text-xs text-gray-700 uppercase">
                 <tr>
-                    <th class="px-4 py-3">ID</th>
-                    <th class="px-4 py-3">Name</th>
-                    <th class="px-4 py-3">Address</th>
-                    <th class="px-4 py-3">Tel Number</th>
-                    <th class="px-4 py-3">Website</th>
-                    <th class="px-4 py-3">Descriptions</th>
+                    <th v-for="header in headers" :key="header.key" class="px-4 py-3">{{ header.label }}</th>
                     <th class="px-4 py-3">
                         <span class="sr-only">Actions</span>
                     </th>

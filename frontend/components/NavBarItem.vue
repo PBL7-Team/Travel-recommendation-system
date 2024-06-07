@@ -54,7 +54,6 @@ const username = ref('Guest')
 onMounted(() => {
   if (isLoggedIn) {
     const curUser = JSON.parse(localStorage.getItem('user'))
-    console.log(curUser)
     username.value = curUser?.first_name + ' ' + curUser?.last_name;
   }
 })
