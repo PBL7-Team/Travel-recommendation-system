@@ -1,13 +1,37 @@
-version: '3.1'
+version: '3.8'
 
 services:
-
   web:
     build:
-      context: .
+      context: ./backend
     container_name: PBL7-backend
     restart: always
     ports:
       - 8000:8000
     env_file:
       - ./docker.env
+
+  rasa:
+    build:
+      context: ./rasa_module
+      dockerfile: Dockerfile
+    container_name: rasa-server
+    restart: always
+    ports:
+      - 5005:5005
+    volumes:
+      - ./rasa_module/models:/app/models
+    depends_on:
+      - web
+
+  action_server:
+    build:
+      context: ./rasa_module/actions
+    container_name: rasa-action-server
+    restart: always
+    ports:
+      - 5055:5055
+    volumes:
+      - ./rasa_module/actions:/app/actions
+    depends_on:
+      - rasa

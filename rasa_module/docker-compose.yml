@@ -1,0 +1,18 @@
+version: '3.0'
+
+services:
+  rasa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5005:5005
+    volumes:
+      - ./models:/app/models
+
+  action_server:
+    build: ./actions
+    ports:
+      - 5055:5055
+    volumes:
+      - ./actions:/app/actions
