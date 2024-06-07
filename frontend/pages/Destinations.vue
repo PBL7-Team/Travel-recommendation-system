@@ -6,7 +6,14 @@ import LayoutAuthenticated from '@/layouts/authenticated.vue'
 //   layout: 'authenticated'
 // })
 
-
+const headers = [
+  { key: 'ID', label: 'ID' },
+  { key: 'name', label: 'Name' },
+  { key: 'address', label: 'Address' },
+  { key: 'tel', label: 'Tel Number' },
+  { key: 'website', label: 'Website' },
+  { key: 'description', label: 'Descriptions' }
+];
 const destinations = ref([]);
 const totalPages = ref(173)
 
@@ -46,7 +53,7 @@ onMounted(fetchData);
 <template>
   <div>
     <LayoutAuthenticated>
-      <DataTable :items="destinations" :totalPages="totalPages" :currentPage="currentPage"/>
+      <DataTable :items="destinations" :totalPages="totalPages" :currentPage="currentPage" :headers="headers" />
     </LayoutAuthenticated>
   </div>
 

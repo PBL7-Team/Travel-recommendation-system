@@ -10,9 +10,9 @@ import {
   mdiTelevisionGuide,
   mdiResponsive,
   mdiPalette,
-  mdiReact,
   mdiMapMarker,
-  mdiWeatherCloudyClock
+  mdiWeatherCloudyClock,
+  mdiAccountMultiple
 } from '@mdi/js'
 
 export default [
@@ -25,6 +25,11 @@ export default [
     to: '/destinations',
     icon: mdiMapMarker,
     label: 'Destinations'
+  },
+  {
+    to: '/users',
+    icon: mdiAccountMultiple,
+    label: 'Users'
   },
   // {
   //   to: '/tables',
@@ -56,28 +61,28 @@ export default [
     label: 'Profile',
     icon: mdiAccountCircle
   },
-  {
-    to: '/auth/login',
-    label: 'Login',
-    icon: mdiLock
-  },
-  {
-    to: '/error',
-    label: 'Error',
-    icon: mdiAlertCircle
-  },
-  {
-    label: 'Dropdown',
-    icon: mdiViewList,
-    menu: [
-      {
-        label: 'Item One'
-      },
-      {
-        label: 'Item Two'
-      }
-    ]
-  },
+  // {
+  //   to: '/auth/login',
+  //   label: 'Login',
+  //   icon: mdiLock
+  // },
+  // {
+  //   to: '/error',
+  //   label: 'Error',
+  //   icon: mdiAlertCircle
+  // },
+  // {
+  //   label: 'Dropdown',
+  //   icon: mdiViewList,
+  //   menu: [
+  //     {
+  //       label: 'Item One'
+  //     },
+  //     {
+  //       label: 'Item Two'
+  //     }
+  //   ]
+  // },
   {
     to: '/crawl',
     label: 'Scrape schedule',
