@@ -16,6 +16,7 @@
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "@nuxt/ui": "^2.16.0",
+    "@nuxtjs/i18n": "^8.3.1",
     "@nuxtjs/toast": "^3.3.1",
     "@nuxtjs/vuetify": "^1.12.3",
     "@pinia/nuxt": "^0.5.1",
