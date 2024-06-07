@@ -9,15 +9,11 @@ export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
         // initialize state from local storage to enable user to stay logged in
-        id: '',
-        first_name: '',
-        last_name: '',
-        username: '',
-        access_token: '',
-        refresh_token: '',
-        expired_time: '',
-        isLoggedIn: false,
-        user:null,
+        access_token: localStorage.getItem('access_token') || '',
+        refresh_token: localStorage.getItem('refresh_token') || '',
+        expired_time: localStorage.getItem('expired_time') || '',
+        isLoggedIn: !!localStorage.getItem('access_token'),
+        user: localStorage.getItem('user'),
     }),
     actions: {
         async login(username: string, password: string) {
@@ -35,21 +31,25 @@ export const useAuthStore = defineStore({
                     this.$state.refresh_token = result.data.refresh_token;
                     this.$state.isLoggedIn = true;
                     const { sub, iat, exp, nbf, scope } = decodeToken(this.$state.access_token);
-                    let format_sub= sub.replace("-",'')
-                    this.getUserById(format_sub).then(
-                        (data)=>{
-                            this.$state.user=data
-                            localStorage.setItem('user', JSON.stringify(data));
-                            console.log(this.$state.user)
-                        }
-                    )
-                 
+                    let format_sub = sub.replace("-", '')
+                    const currentTime = new Date();
+                    this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
+                    const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
+                    token.value = this.$state.access_token
+                    const userData = await this.getUserById(format_sub);
+                    this.$state.user = userData;
 
-                }else{
-                    console.log('error status',result.status )
+                    // Persist the state to localStorage
+                    // Save tokens and expiration time to localStorage
+                    localStorage.setItem('access_token', this.$state.access_token);
+                    localStorage.setItem('refresh_token', this.$state.refresh_token);
+                    localStorage.setItem('expired_time', this.$state.expired_time);
+                    localStorage.setItem('user', JSON.stringify(this.$state.user));
+                } else {
+                    console.log('error status', result.status)
                 }
                 console.log(result.data)
-               
+
                 return result
 
             } catch (error) {
@@ -62,33 +62,97 @@ export const useAuthStore = defineStore({
                 console.error("Login error:", error);
             }
         },
+        async loginByGoogle(credential: any) {
+            const formData = new FormData();
+            // formData.append("credential", credential);
+            formData.append("access_token", credential);
+            const result = await axios.post(`${baseUrl}/google/login/`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            if (result.status == 200) {
+                this.$state.access_token = result.data.access_token;
+                this.$state.refresh_token = result.data.refresh_token;
+                this.$state.isLoggedIn = true;
+                const { sub, iat, exp, nbf, scope } = decodeToken(this.$state.access_token);
+                let format_sub = sub.replace("-", '')
+                const currentTime = new Date();
+                this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
+                const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
+                token.value = this.$state.access_token
+                const userData = await this.getUserById(format_sub);
+                this.$state.user = userData;
+
+                // Persist the state to localStorage
+                // Save tokens and expiration time to localStorage
+                localStorage.setItem('access_token', this.$state.access_token);
+                localStorage.setItem('refresh_token', this.$state.refresh_token);
+                localStorage.setItem('expired_time', this.$state.expired_time);
+                localStorage.setItem('user', JSON.stringify(this.$state.user));
+            } else {
+                console.log('error status', result.status)
+            }
+            console.log(result.data)
+
+            return result
+
+        },
+
         async getUserById(userId: string) {
-            try{
+            try {
                 let res = await axios.get(`${baseUrl}/users/${userId}`)
-                if (res.status==200){
+                if (res.status == 200) {
                     // console.log
                     return res.data
-                }else{
-                    
+                } else {
+
                 }
-            }catch(e){
+            } catch (e) {
                 console.error(e)
             }
         },
-        getUser(){
+        getUser() {
             return this.$state.user;
         },
-
+        isUserLoggedIn() {
+            // Check if the access token exists and has not expired
+            return this.isLoggedIn && new Date(this.expired_time) > new Date();
+        },
         async logout() {
-            await axios.post('/logout')
-            this.resetState()
+            const formData = new FormData();
+            formData.append("access_token", this.access_token);
+            formData.append("refresh_token", this.refresh_token);
+            // Log the tokens to verify they are not null or malformed
+            console.log("Access Token:", this.access_token);
+            console.log("Refresh Token:", this.refresh_token);
+            const res = await axios.post(`${baseUrl}/logout`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${this.access_token}`
+                }
+            });
+            console.log(res)
+            // const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
+            // this.isLoggedIn = false; // set authenticated  state value to false
+            // token.value = null
+            // this.resetState()
+            if (res.status === 200) {
+                // Clear all data from localStorage
+                localStorage.clear();
+
+                // Clear the token from cookies
+                const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
+                token.value = null;
+
+                // Update the authentication state
+                this.isLoggedIn = false; // Set authenticated state value to false
+                this.resetState(); // Reset any additional state if necessary
+            } else {
+                console.error('Logout failed:', res.status, res.data);
+            }
         },
 
         resetState() {
-            this.$state.id = ''
-            this.$state.first_name = ''
-            this.$state.last_name = ''
-            this.$state.username = ''
             this.$state.access_token = ''
             this.$state.isLoggedIn = false
         },

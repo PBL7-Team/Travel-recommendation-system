@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import {
+    GoogleSignInButton,
+    type CredentialResponse
+} from 'vue3-google-signin'
 import BaseIcon from '@/components/BaseIcon.vue'
 import { mdiGoogle, mdiFacebook, mdiTwitter } from '@mdi/js'
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
@@ -47,8 +51,6 @@ const login = async () => {
         if (result?.data) {
             toast.add({
                 title: 'Login Successfully',
-                // description: 'Invalid username or password, please check again',
-                // icon: 'i-octicon-desktop-download-24',
                 timeout: 1000,
             })
             router.push('/')
@@ -64,17 +66,38 @@ const login = async () => {
     }
 
 };
-const loginWithGoogle = async () => {
-    await fetch('http://localhost:8000/api/v1/login', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        credentials: 'include', // Để gửi cookies, authentication headers
-        body: JSON.stringify({
-            username: loginForm.value.username,
-            password: loginForm.value.password
+// const loginWithGoogle = async () => {
+//     const result = await userStore.loginByGoogle()
+//     if (result?.data) {
+//         toast.add({
+//             title: 'Login Successfully',
+//             timeout: 1000,
+//         })
+//         router.push('/')
+//     }
+// };
+
+const onLoginSuccess = async (resp: CredentialResponse) => {
+    console.log("Login successful", resp);
+    const result = await userStore.loginByGoogle(resp.credential)
+    if (result?.data) {
+        toast.add({
+            title: 'Login Successfully',
+            timeout: 10000,
         })
-    });
+        router.push('/')
+    } else {
+        toast.add({
+            title: 'Something went wrong',
+            timeout: 10000,
+        })
+    }
 };
+
+const onLoginError = () => {
+    console.error("Login failed");
+};
+
 
 </script>
 <template>
@@ -83,8 +106,10 @@ const loginWithGoogle = async () => {
             <div class="form-container sign-up">
                 <form @submit.prevent="register">
                     <h1 class="text-xl text-black">Create Account</h1>
-                    <div class="social-icons">
-                        <a href="#" class="icon">
+                    <GoogleSignInButton @success="onLoginSuccess" @error="onLoginError" size="large">
+                    </GoogleSignInButton>
+                    <!-- <div class="social-icons">
+                        <a @click="loginWithGoogle" href="#" class="icon">
                             <BaseIcon :path="mdiGoogle" size="24" />
                         </a>
                         <a href="#" class="icon">
@@ -93,7 +118,7 @@ const loginWithGoogle = async () => {
                         <a href="#" class="icon">
                             <BaseIcon :path="mdiTwitter" size="24" />
                         </a>
-                    </div>
+                    </div> -->
                     <span class="text-gray-500">or use your email for registration</span>
                     <div class="row">
                         <input type="text" v-model="registerForm.first_name" placeholder="First Name">
@@ -108,7 +133,9 @@ const loginWithGoogle = async () => {
             <div class="form-container sign-in">
                 <form @submit.prevent="login">
                     <h1>Sign In</h1>
-                    <div class="social-icons">
+                    <GoogleSignInButton class="mt-5 mb-5" @success="onLoginSuccess" @error="onLoginError" size="large">
+                    </GoogleSignInButton>
+                    <!-- <div class="social-icons">
                         <a href="#" class="icon">
                             <BaseIcon :path="mdiGoogle" size="24" />
                         </a>
@@ -118,7 +145,7 @@ const loginWithGoogle = async () => {
                         <a href="#" class="icon">
                             <BaseIcon :path="mdiTwitter" size="24" />
                         </a>
-                    </div>
+                    </div> -->
                     <span class="text-black">or use your email password</span>
                     <input class="text-black" v-model="loginForm.username" type="email" placeholder="Email">
                     <span class="text-red"></span>

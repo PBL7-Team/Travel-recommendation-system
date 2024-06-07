@@ -298,6 +298,17 @@ GOOGLE_OAUTH2_PROJECT_ID = env.str("DJANGO_GOOGLE_OAUTH2_PROJECT_ID", default=""
 SOCIAL_SECRET = env.str("SOCIAL_SECRET", default="")
 
 
+# Google
+GOOGLE_CLIENT_ID = env.str("GOOGLE_CLIENT_ID", default=None)
+EMAIL_DOMAIN = env("EMAIL_DOMAIN")
+LIMIT_DOMAIN = env.bool("LIMIT_DOMAIN")
+
+DEFAULT_OAUTH2_SCHEME = "http" if API_HOST in ["localhost", "127.0.0.1"] else "https"
+API_PORT='8000'
+DEFAULT_OAUTH2_PORT = ":" + API_PORT if API_PORT is not None else ""
+OAUTH2_URL = DEFAULT_OAUTH2_SCHEME + "://" + API_HOST + DEFAULT_OAUTH2_PORT
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

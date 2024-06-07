@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vesp/nuxt-fontawesome',
     // '@nuxtjs/toast'
+    'nuxt-vue3-google-signin'
   ],
 
   vite: {
@@ -36,6 +37,9 @@ export default defineNuxtConfig({
   components: true,
   colorMode: {
     preference: 'light'
+  },
+  googleSignIn: {
+    clientId: '512422882432-jh7q8uj4dtkhl7l55r99au4nf15tnut8.apps.googleusercontent.com',
   }
 
 })

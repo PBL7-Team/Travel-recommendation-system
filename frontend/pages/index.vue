@@ -8,6 +8,10 @@ definePageMeta({
   layout: 'default'
 })
 
+// definePageMeta({
+//     middleware: 'auth' 
+// })
+
 
 const sentences = ref<string[]>([
   'This is the first sentence.',
@@ -108,7 +112,7 @@ const faqItems = ref([
   // Add more FAQ items here in the same format
 ]);
 
-const toggleFaq = (index) => {
+const toggleFaq = (index:number) => {
   faqItems.value[index].isOpen = !faqItems.value[index].isOpen;
 };
 

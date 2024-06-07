@@ -1,14 +1,23 @@
 <script setup>
 import { ref } from 'vue'
-import { mdiClose, mdiDotsVertical } from '@mdi/js'
+import { mdiClose, mdiDotsVertical, mdiChevronUp, mdiChevronDown } from '@mdi/js'
 import { containerMaxW } from '@/configs/config.js'
 import BaseIcon from '@/components/BaseIcon.vue'
 import NavBarMenuList from '@/components/NavBarMenuList.vue'
 import NavBarItemPlain from '@/components/NavBarItemPlain.vue'
+import UserAvatarCurrentUser from '@/components/UserAvatarCurrentUser.vue'
+import { mdiBackburger, mdiForwardburger, mdiMenu, mdiAccount, mdiCogOutline, mdiEmail, mdiLogout } from '@mdi/js'
 
+import { useAuthStore } from '@/stores/auth.store';
+const userStore = useAuthStore()
+const { user: authUser } = storeToRefs(userStore);
 defineProps({
   menu: {
     type: Array,
+    required: true
+  },
+  isLoggedIn: {
+    type: Boolean,
     required: true
   }
 })
@@ -20,6 +29,34 @@ const menuClick = (event, item) => {
 }
 
 const isMenuNavBarActive = ref(false)
+
+// const isDropdown = ref(false)
+
+// const profileItem = ref({
+//   menu: [
+//     {
+//       icon: mdiAccount,
+//       label: 'My Profile',
+//       to: '/profile'
+//     },
+//     {
+//       icon: mdiCogOutline,
+//       label: 'Settings'
+//     },
+//     {
+//       icon: mdiEmail,
+//       label: 'Messages'
+//     },
+//     {
+//       isDivider: true
+//     },
+//     {
+//       icon: mdiLogout,
+//       label: 'Log Out',
+//       isLogout: true
+//     }
+//   ]
+// })
 
 </script>
 
@@ -41,10 +78,7 @@ const isMenuNavBarActive = ref(false)
         :class="[isMenuNavBarActive ? 'block' : 'hidden']">
         <NavBarMenuList :menu="menu" @menu-click="menuClick" />
       </div>
-      <div>
-        <a href="/auth/newlogin" class="cta inline-block bg-blue-600 text-white hover:bg-blue-500 px-3 py-2 rounded">Get
-          Started</a>
-      </div>
+     
     </div>
   </nav>
 </template>
