@@ -86,7 +86,7 @@ DEBUG=True
 API_HOST = env("API_HOST")
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
-    default=[API_HOST, "api", "localhost", "host.docker.internal"],
+    default=[API_HOST, "api", "localhost", "host.docker.internal", "singular-joey-normally.ngrok-free.app"],
 )
 
 # ALLOWED_HOSTS =['4.145.112.182','localhost','travel-app.southeastasia.cloudapp.azure.com','*']
@@ -130,6 +130,7 @@ DJANGO_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
 )
 
 THIRD_PARTY_APPS = (
@@ -365,7 +366,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 API_HOST = "localhost"
 API_PORT = 8000
 
-ALLOWED_HOSTS = [API_HOST, "api", "localhost", "host.docker.internal"]
+ALLOWED_HOSTS = [API_HOST, "api", "localhost", "host.docker.internal" , "singular-joey-normally.ngrok-free.app"]
 
 DEFAULT_CLIENT_SECRET = (
     os.environ["DEFAULT_CLIENT_SECRET"]

@@ -2,7 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+import ngrok
 
 def main():
     """Run administrative tasks."""
@@ -15,8 +15,19 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    execute_from_command_line(sys.argv)
 
+    try:
+        ngrok.set_auth_token("2QjcBSc1a8mdClgelHJaZXiXeh1_6S4DBgVfMRyHj8eQPCrS")
+        listener = ngrok.forward(8000, hostname="singular-joey-normally.ngrok-free.app")
+        print(f"Ingress established at {listener.url()}")
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        ngrok.disconnect()
+        # ngrok.set_auth_token("2QjcBSc1a8mdClgelHJaZXiXeh1_6S4DBgVfMRyHj8eQPCrS")
+        # listener = ngrok.forward(8000, hostname="singular-joey-normally.ngrok-free.app")
+        # print(f"Ingress established at {listener.url()}")
+
+    execute_from_command_line(sys.argv)
 
 if __name__ == '__main__':
     main()
