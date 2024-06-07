@@ -7,7 +7,7 @@ import menuNavBar from '~/configs/menuAdminNavBar.js'
 import { useDarkModeStore } from '@/stores/darkMode.js'
 import BaseIcon from '@/components/BaseIcon.vue'
 import FormControl from '@/components/FormControl.vue'
-import NavBar from '@/components/NavBar.vue'
+import NavBar from '@/components/AdminNavbar.vue'
 import NavBarItemPlain from '@/components/NavBarItemPlain.vue'
 import AsideMenu from '@/components/AsideMenu.vue'
 import FooterBar from '@/components/FooterBar.vue'
@@ -15,6 +15,11 @@ import FooterBar from '@/components/FooterBar.vue'
 definePageMeta({
     middleware: 'auth'
 })
+
+const { t, locale, locales, setLocale } = useI18n()
+import { useLanguageStore } from '~/stores/language'
+const languageStore = useLanguageStore()
+
 
 const layoutAsidePadding = 'xl:pl-60'
 
