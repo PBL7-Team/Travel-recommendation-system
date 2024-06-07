@@ -1,0 +1,68 @@
+version: "3.1"
+
+intents:
+  - greet
+  - thank
+  - bye
+  - ask_func_list
+  - ask_name
+  - give_name
+  - ask_place_info
+  - recommend_place
+
+entities:
+  - cust_sex
+  - cust_name
+  - place
+  - number
+
+slots:
+  cust_sex:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: cust_sex
+  cust_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: cust_name
+  place:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: place
+  number:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: number
+
+responses:
+  utter_greet:
+    - text: "Kính chào Quý khách! Quý khách vui lòng cho biết tên để tiện xưng hô được không ạ"
+  utter_greet_with_name:
+    - text: "Chào bạn {cust_name}. Bold Voyage Heros có thể giúp gì được ạ?"
+  utter_bye:
+    - text: "Kính chào tạm biệt và mong sớm gặp lại quý khách!"
+    - text: "Kính chào tạm biệt và chúc quý khách một ngày tốt lành!"
+  utter_thank:
+    - text: "Cảm ơn quý khách quá khen ạ"
+    - text: "Dạ không có gì, đó là trách nhiệm của mình mà!"
+  utter_func_list:
+    - text: "Mình có thể hỗ trợ bạn tìm kiếm những địa điểm du lịch dựa trên yêu cầu của bạn nhé"
+  utter_ask_name:
+    - text: "Mình là chatbot Bold Voyage Heros Quý khách cần trợ giúp gì ạ?"
+  utter_unclear:
+    - text: "Thưa quý khách, hiện tại tôi chưa hiểu được yêu cầu của Quý khách."
+
+actions:
+  - action_save_cust_info
+  - action_save_mobile_no
+  - action_reset_slot
+  - action_search_place_info
+  - action_recommend_place
