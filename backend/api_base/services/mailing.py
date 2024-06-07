@@ -27,6 +27,10 @@ class MailingThread(threading.Thread):
 
 
 class Mailing:
+    @staticmethod
+    def async_send_messages(messages):
+        MailingThread(messages=messages).start()
+
     @classmethod
     def create_html_message(cls, data, attachment=None, headers=None):
         subject = data.get("subject")
@@ -72,10 +76,11 @@ class Verification(BaseService):
 
     @staticmethod
     def create_token(data, life_time=3600):
+        print('data',data)
         if not isinstance(data, dict):
             raise ValidationError(detail=_("Invalid format"))
         
-        payload = data
+        payload = data.copy()
         payload.update()
         {
             "iat": datetime.now().timestamp(),

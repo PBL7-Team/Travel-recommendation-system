@@ -9,6 +9,7 @@ from oauthlib.oauth2.rfc6749.utils import list_to_scope
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.debug import sensitive_post_parameters
 from oauth2_provider.views.mixins import OAuthLibMixin
+import rest_framework
 from rest_framework.response import Response
 from django.utils.translation import gettext as _
 from api_user.serializers import CreateUserSerializer
@@ -22,6 +23,7 @@ from core.settings.base import (
 )
 from rest_framework.status import (
     HTTP_200_OK,
+    HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
@@ -172,12 +174,23 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
         Registers user to the server. Input should be in the format:
         {"username": "username", "password": "1234abcd"}
         """
+        email = request.data.get("email")
+        first_name = request.data.get("first_name")
+        last_name = request.data.get("last_name")
+        password = request.data.get("password")
+        data={
+            'email':email,
+            'first_name':first_name,
+            'last_name':last_name,
+            'password':password
+        }
         # Put the data from the request into the serializer
-        serializer = CreateUserSerializer(data=request.data)
+        serializer = CreateUserSerializer(data=data)
         # Validate the data
         if serializer.is_valid():
             # If it is valid, save the data (creates a user).
             user = serializer.save()
+            return Response(serializer.data, status=HTTP_201_CREATED)
             # Then we get a token for the created user.
             # This could be done differentley
 
@@ -215,17 +228,17 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             # return response
 
             # Send welcome email
-            try:
-                OAuth2Service.send_verify_email(request, user)
-                return Response(
-                    {"message": _("The invitation have been sent.")}, status=HTTP_200_OK
-                )
-            except Exception as e:
-                print(e)
-                return Response(
-                    {"message": _("There is an error occur.")},
-                    status=HTTP_500_INTERNAL_SERVER_ERROR,
-                )
+            # try:
+            #     OAuth2Service.send_verify_email(request, user)
+            #     return Response(
+            #         {"message": _("The invitation have been sent.")}, status=HTTP_200_OK
+            #     )
+            # except Exception as e:
+            #     print(e)
+            #     return Response(
+            #         {"message": _("There is an error occur.")},
+            #         status=HTTP_500_INTERNAL_SERVER_ERROR,
+            #     )
 
         return Response(serializer.errors, status=HTTP_401_UNAUTHORIZED)
 
