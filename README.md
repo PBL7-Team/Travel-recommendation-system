@@ -52,6 +52,12 @@ copy [backend/config.env.sample](backend/config.env.sample) to `backend/config.e
 python ./backend/manage.py migrate
 ```
 
+### 1.5. Create RSA key
+```
+    openssl genrsa -out oidc.key 4096
+```
+
+
 ### 1.5. Build fronend
 From the frontend folder
 * Install libraries for frontend
