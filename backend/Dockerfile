@@ -17,12 +17,15 @@ RUN set -ex \
     && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
     && apt-get update && apt-get install -y $RUN_DEPS \
     && pip install ngrok \
-    && pip install --no-cache-dir -r /requirements/production.txt \
+    && pip install --no-cache-dir -r /requirements/requirements.txt \
     && rm -rf /var/lib/apt/lists/*
 
+# Create the code directory
 RUN mkdir /code/
 WORKDIR /code/
-ADD backend /code/
+
+# Copy the backend source code
+COPY . /code/
 
 RUN python manage.py migrate
 RUN python manage.py collectstatic --noinput
