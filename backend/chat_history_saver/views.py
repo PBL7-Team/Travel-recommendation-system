@@ -21,7 +21,7 @@ class ChatHistoryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):       
         # try:
         return ChatHistory.objects.filter(user=self.request.user).order_by('-timestamp')
-        
+    
     def list(self, request):
         queryset = ChatHistory.objects.filter(user=self.request.user).order_by('-timestamp')
         serializer = ChatHistorySerializer(queryset, many=True)
@@ -34,9 +34,9 @@ class ChatHistoryViewSet(viewsets.ModelViewSet):
 
         try:
             response_data = call_rasa(user.username, chat_message, url)
-            print(response_data)
+            print('res',response_data)
             system_answer = response_data[0].get('text')
-            print(system_answer)
+            print('sys',system_answer)
             serializer.save(system_answer=system_answer)
             return JsonResponse({
                 'data': response_data,
