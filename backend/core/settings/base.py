@@ -114,8 +114,8 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
-
-CORS_ALLOW_HEADERS = list(default_headers)
+CORS_ALLOW_ALL_HEADERS = True
+# CORS_ALLOW_HEADERS = list(default_headers)
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGIN_REGEXES = [
     "http://localhost:3000",

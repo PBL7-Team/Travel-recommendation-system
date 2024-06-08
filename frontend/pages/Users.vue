@@ -5,6 +5,7 @@ import DataTable from '@/components/Table/DataTable.vue'
 import LayoutAuthenticated from '@/layouts/authenticated.vue'
 // const { users } = await useFetch('/api/users');
 import axios from 'axios';
+import api from '@/stores/api';
 import { ref, onMounted } from 'vue';
 const users = ref([]);
 const loading = ref(false);
@@ -16,8 +17,8 @@ const totalPages = ref(1)
 // const { data } = await useFetch('/api/users');
 onMounted(async () => {
     try {
-        const response =  await axios.get(`${baseUrl}/api/v1/users?page=${currentPage.value}`);
-        console.log('res: ',response.data)
+        const response = await axios.get(`http://singular-joey-normally.ngrok-free.app/api/v1/users/`);
+        console.log('res: ', response)
         users.value = response.data.results;
         totalPages.value = response.data.num_pages
     } catch (error) {
@@ -38,8 +39,9 @@ const headers = [
     <div>
         <LayoutAuthenticated>
             <!-- <div>{{data}}</div> -->
-            <DataTable v-if="!loading" :items="users" :headers="headers" :currentPage="currentPage" :totalPages="totalPages"/>
-            <NuxtLoadingIndicator v-else/>
+            <DataTable v-if="!loading" :items="users" :headers="headers" :currentPage="currentPage"
+                :totalPages="totalPages" />
+            <NuxtLoadingIndicator v-else />
         </LayoutAuthenticated>
     </div>
 </template>
