@@ -21,9 +21,6 @@ class ChatHistoryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):       
         # try:
         return ChatHistory.objects.filter(user=self.request.user).order_by('-timestamp')
-    
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
         
     def list(self, request):
         queryset = ChatHistory.objects.filter(user=self.request.user).order_by('-timestamp')
@@ -33,7 +30,7 @@ class ChatHistoryViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         chat_message = serializer.validated_data.get('chat_message')
-        url = 'http://4.145.112.182:5005/webhooks/rest/webhook'  # Replace with your webhook URL
+        url = 'http://oh-travel.southeastasia.cloudapp.azure.com:5005/webhooks/rest/webhook'  # Replace with your webhook URL
 
         try:
             response_data = call_rasa(user.username, chat_message, url)

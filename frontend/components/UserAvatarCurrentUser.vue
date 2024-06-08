@@ -20,7 +20,6 @@ const userAvatar = ref('');
 // onMounted lifecycle hook
 onMounted(() => {
   const storedUser = JSON.parse(localStorage.getItem('user'));
-  console.log('su', storedUser.user)
   if (storedUser) {
     user.value = storedUser
     name.value = storedUser.first_name + ' ' + storedUser.last_name
