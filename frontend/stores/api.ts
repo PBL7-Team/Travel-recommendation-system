@@ -3,10 +3,6 @@ const config = useRuntimeConfig();
 const baseUrl = config.public.apiUrl;
 const api = axios.create({
     baseURL: baseUrl,
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
 });
 const router = useRouter()
 api.interceptors.request.use(
@@ -27,12 +23,6 @@ api.interceptors.request.use(
 
         // Set Authorization header
         config.headers['Authorization'] = `Bearer ${authStore.$state.access_token}`;
-        if (config.data instanceof FormData) {
-            config.headers['Content-Type'] = 'multipart/form-data';
-        } else {
-            // Otherwise, use application/json
-            config.headers['Content-Type'] = 'application/json';
-        }
         config.headers['Accept'] = 'application/json';
         return config;
     },
