@@ -46,7 +46,7 @@ const sendPrompt = async () => {
     const lastMessage = messages.value[messages.value.length - 1].message;
     console.log(lastMessage)
     const userId = 'a54579edc369439abc090f45451301dd'
-    if (authUser.value.id != undefined && authUser.value) {
+    if (authUser.value) {
         const userId = authUser.value.id
     }
     console.log('user Id', userId)
