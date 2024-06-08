@@ -23,7 +23,6 @@
     "@tiptap/starter-kit": "^2.3.0",
     "@tiptap/vue-3": "^2.3.0",
     "apexcharts": "^3.49.0",
-    "axios": "^1.6.8",
     "chart.js": "^4.4.2",
     "numeral": "^2.0.6",
     "nuxt": "^3.11.2",

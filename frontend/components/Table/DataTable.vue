@@ -62,12 +62,13 @@ const handleSearch = (search) => {
                 </tr>
             </thead>
             <tr v-for="item in filterItems" :key="item.id" class="border-b">
-                <td class="px-4 py-3 font-medium text-gray-900">{{ item.ID }}</td>
+                <!-- <td class="px-4 py-3 font-medium text-gray-900">{{ item.ID }}</td>
                 <td class="px-4 py-3 font-medium text-gray-900">{{ item.name }}</td>
                 <td class="px-4 py-3">{{ item.address }}</td>
                 <td class="px-4 py-3">{{ item.tel }}</td>
                 <td class="px-4 py-3">{{ item.website }}</td>
-                <td class="px-4 py-3 text-ellipsis overflow-hidden">{{ item.description }}</td>
+                <td class="px-4 py-3 text-ellipsis overflow-hidden">{{ item.description }}</td> -->
+                <td v-for="header in headers" :key="header.key" class="px-4 py-3">{{ item[header.key] }}</td>
                 <td class="px-4 py-3 flex items-center justify-end">
                     <a href="#" class="text-indigo-500 hover:underline">Details</a>
                 </td>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DataTable from '@/components/Table/DataTable.vue'
 import LayoutAuthenticated from '@/layouts/authenticated.vue'
-
+import api from '@/stores/api';
 // definePageMeta({
 //   layout: 'authenticated'
 // })
@@ -28,22 +28,25 @@ async function refetch(pageNumber: any) {
 // Function to fetch data from the API
 async function fetchData() {
   try {
-    const response = await fetch(`http://localhost:8000/api/v1/destinations?page=${currentPage.value}`, {
-      method: 'GET',
+    const response = await api.get(`/api/v1/destinations`, {
+      params: {
+        page: currentPage.value, // Pass the page as a parameter
+      }
     });
-    if (response.ok) {
-      const data = await response.json();
+
+    // Check if the response status is in the range of 2xx
+    if (response.status >= 200 && response.status < 300) {
+      const data = response.data; // Axios automatically parses JSON
       destinations.value = data.results;
-      console.log(data.totalPages)
       totalPages.value = data.totalPages;
+      console.log(data.totalPages);
     } else {
-      console.error("Failed to fetch data");
+      console.error("Failed to fetch data with status:", response.status);
     }
   } catch (error) {
     console.error("An error occurred while fetching data:", error);
   }
 }
-
 // Fetch data when the component is mounted
 onMounted(fetchData);
 

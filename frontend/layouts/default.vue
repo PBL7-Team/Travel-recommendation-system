@@ -1,13 +1,13 @@
 <script setup>
 import Navbar from '@/components/DefaultNavbar.vue'
 import Footer from '@/components/IndexFooter.vue'
-import menuNavBar,{createLoggedOutMenu}  from '~/configs/menuNavBar.js'
+import menuNavBar, { createLoggedOutMenu } from '~/configs/menuNavBar.js'
 import { mdiBackburger, mdiForwardburger, mdiMenu, mdiAccount, mdiCogOutline, mdiEmail, mdiLogout } from '@mdi/js'
 // Authentication
 definePageMeta({
   middleware: 'auth'
 })
-
+  
 import { useAuthStore } from '@/stores/auth.store';
 
 const userStore = useAuthStore()
@@ -44,7 +44,6 @@ const menuClick = (event, item) => {
   if (item.isLogout) {
     //
     userStore.logout().then(() => {
-      
       // menu.value = createMenu(false)
       router.push('/')
     }).catch((err) => {
@@ -61,7 +60,7 @@ const menuClick = (event, item) => {
   }">
 
     <div
-      class="pt-14 min-h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100">
+      class="pt-14 min-h-screen w-screen transition-position lg:w-auto bg-white dark:bg-slate-800 dark:text-slate-100">
 
       <NavBar :menu="menu" :isLoggedIn="isLoggedIn" :class="[{ 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
         @menu-click="menuClick">

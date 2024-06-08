@@ -1,7 +1,8 @@
 <script setup>
 import Navbar from '@/components/DefaultNavbar.vue'
 import Footer from '@/components/IndexFooter.vue'
-let baseUrl = `${import.meta.env.VITE_API_URL}`;
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiUrl;
 import { useAuthStore } from '@/stores/auth.store';
 const userStore = useAuthStore()// use authenticateUser action from  auth store
 const { user: authUser } = storeToRefs(userStore);
@@ -44,11 +45,17 @@ const sendPrompt = async () => {
 
     const lastMessage = messages.value[messages.value.length - 1].message;
     console.log(lastMessage)
-    const res = await fetch(`${baseUrl}/chat-history`, {
+    const userId = 'a54579edc369439abc090f45451301dd'
+    if (authUser.value.id != undefined && authUser.value) {
+        const userId = authUser.value.id
+    }
+    console.log('user Id', userId)
+
+    const res = await fetch(`${baseUrl}/api/v1/chat-history`, {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             // 'user': `${authUser.id}`,
-            'user': 'a54579edc369439abc090f45451301dd',
+            'user': userId,
             'chat_message': lastMessage
         }),
         method: 'post'
@@ -73,13 +80,12 @@ const sendPrompt = async () => {
 };
 function processMessage(message) {
     // Replace \n with <br> tags
-    if(message)
-    {
+    if (message) {
         return message.replace(/\n/g, '<br>');
     }
-       
-    else{
-        return message
+
+    else {
+        return 'The system is maintenance. Please come back later!'
     }
 }
 </script>

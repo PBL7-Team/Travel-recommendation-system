@@ -7,6 +7,7 @@ from api_user.serializers import UserSerializer
 # Create your views here.
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -35,3 +36,9 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action in ["list", "retrieve"]:
             return [AllowAny()]
         return super().get_permissions()
+    
+    def retrieve(self, request, *args, **kwargs):
+        """Override retrieve to customize JSON response if needed"""
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

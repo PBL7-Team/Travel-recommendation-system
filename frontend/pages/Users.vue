@@ -1,18 +1,25 @@
-<script setup>
+<script setup lang="ts">
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiUrl;
 import DataTable from '@/components/Table/DataTable.vue'
 import LayoutAuthenticated from '@/layouts/authenticated.vue'
 // const { users } = await useFetch('/api/users');
+import axios from 'axios';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';  
 const users = ref([]);
 const loading = ref(false);
+const currentPage = ref(1)
+const totalPages = ref(1)
 // onMounted(() => {
 //     console.log('user: ', users)
 // })
+// const { data } = await useFetch('/api/users');
 onMounted(async () => {
     try {
-        const { data } = await axios.get('/api/v1/users');
-        users.value = data.results;
+        const response =  await axios.get(`${baseUrl}/api/v1/users?page=${currentPage.value}`);
+        console.log('res: ',response.data)
+        users.value = response.data.results;
+        totalPages.value = response.data.num_pages
     } catch (error) {
         console.log('Error fetching users:', error);
     } finally {
@@ -30,7 +37,8 @@ const headers = [
 <template>
     <div>
         <LayoutAuthenticated>
-            <DataTable v-if="!loading" :items="users" :headers="headers"/>
+            <!-- <div>{{data}}</div> -->
+            <DataTable v-if="!loading" :items="users" :headers="headers" :currentPage="currentPage" :totalPages="totalPages"/>
             <NuxtLoadingIndicator v-else/>
         </LayoutAuthenticated>
     </div>
