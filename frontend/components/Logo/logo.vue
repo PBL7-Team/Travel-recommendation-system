@@ -2,7 +2,7 @@
 </script>
 <template>
     <a href="/">
-        <img class="img" src="@/assets/images/team_logo1.png" alt="Logo" />
+        <img class="img p-2" src="@/assets/images/team_logo1.png" alt="Logo" />
     </a>
 </template>
 <style lang="scss" scoped>

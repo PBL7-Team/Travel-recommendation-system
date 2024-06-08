@@ -2,7 +2,9 @@
 import LayoutAuthenticated from '@/layouts/authenticated.vue'
 const toast = useToast()
 import axios from 'axios'
-let baseUrl = `${import.meta.env.VITE_API_URL}`;
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiUrl;
+// let baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 const startCrawl = async () => {
     try {

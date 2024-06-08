@@ -10,19 +10,28 @@ export default {
     "./error.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'blue':  {
+          500: '#3b82f6',
+          950: '#17275c',
+        },
+        'purple': '#7e5bef',
+        'pink': '#ff49db',
+        'orange': '#ff7849',
+        'green': '#13ce66',
+        'yellow': '#ffc82c',
+        'gray-dark': '#273444',
+        'gray': '#8492a6',
+        'gray-light': '#d3dce6',
+      },
+      boxShadow: {
+        'custom-shadow': '0 20px 30px -10px rgba(29, 1, 80, .1)',
+      },
+    },
   },
-  colors: {
-    'blue': '#1fb6ff',
-    'purple': '#7e5bef',
-    'pink': '#ff49db',
-    'orange': '#ff7849',
-    'green': '#13ce66',
-    'yellow': '#ffc82c',
-    'gray-dark': '#273444',
-    'gray': '#8492a6',
-    'gray-light': '#d3dce6',
-  },
+
+
   plugins: [],
 }
 

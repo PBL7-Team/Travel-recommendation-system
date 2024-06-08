@@ -3,6 +3,11 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: false },
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.NUXT_API_URL
+    }
+  },
   modules: [
     '@nuxt/ui',
     '@pinia/nuxt',
@@ -40,7 +45,7 @@ export default defineNuxtConfig({
     preference: 'light'
   },
   googleSignIn: {
-    clientId: '512422882432-jh7q8uj4dtkhl7l55r99au4nf15tnut8.apps.googleusercontent.com',
+    clientId: process.env.GOOGLE_SIGNIN_CLIENT_ID||'512422882432-jh7q8uj4dtkhl7l55r99au4nf15tnut8.apps.googleusercontent.com',
   },
   i18n: {
     vueI18n: './localization/i18n.config.ts'
