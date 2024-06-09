@@ -128,22 +128,24 @@ export const useAuthStore = defineStore({
                 const response = await fetch(`${baseUrl}/api/v1/users/${userId}`, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
+                        // 'Content-Type': 'application/json',
+                        // 'Accept': 'application/json',
                         'Authorization': `Bearer ${this.$state.access_token}`,
-                        // 'ngrok-skip-browser-warning': 'skip-browser-warning'
+                        'ngrok-skip-browser-warning': 'skip-browser-warning'
                     }
                 });
-                
-                console.log('response user: ',response)
+
+                console.log('response user: ', response)
                 if (response.ok) { // Checks if the status is in the range 200-299
-                    const data = await response.json(); // Parse the JSON response
+                    // Parse the JSON respons
+                    const data = await response.json(); 
                     console.log('res:', data);
                     return data;
                 } else {
                     console.error(`Server error ${response.status} when fetching user ${userId}`);
                     return null;
                 }
+               
             } catch (error) {
                 console.error('An error occurred while fetching user data:', error);
                 return null;
