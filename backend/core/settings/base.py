@@ -121,7 +121,9 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
-CORS_ALLOW_HEADERS = list(default_headers)
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "ngrok-skip-browser-warning",
+]
 CORS_ALLOW_METHODS = list(default_methods)  # Bao gồm tất cả các phương thức HTTP chuẩn
 CORS_ALLOW_ALL_HEADERS = True  # Cho phép tất cả headers
 CORS_ALLOW_CREDENTIALS = True  # Cho phép gửi thông tin xác thực
