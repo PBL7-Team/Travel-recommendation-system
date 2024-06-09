@@ -86,7 +86,6 @@ API_HOST = env("API_HOST")
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
     default=[
-        "*",
         API_HOST,
         "api",
         "localhost",
@@ -110,6 +109,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3001",
     "http://127.0.0.1:3001",
     "http://4.145.112.182:8000",
+    "http://4.145.114.205:8000",
 ]
 
 CORS_ALLOW_METHODS = [
