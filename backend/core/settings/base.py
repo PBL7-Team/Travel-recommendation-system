@@ -16,7 +16,7 @@ from os.path import join
 import environ
 from . import env, BASE_DIR
 
-from corsheaders.defaults import default_headers,default_methods
+from corsheaders.defaults import default_headers, default_methods
 from ..scopes import scopes, default_scopes
 from api_oauth2.tokens import signed_token_generator
 
@@ -70,9 +70,7 @@ DBCA_KEY_FILE = (
     if "DBCA_KEY_FILE" in os.environ
     else env("DBCA_KEY_FILE")
 )
-DBCA_KEY_FILE_PATH = (
-    join(CUSTOM_BASE_DIR, DBCA_KEY_FILE)
-)
+DBCA_KEY_FILE_PATH = join(CUSTOM_BASE_DIR, DBCA_KEY_FILE)
 
 JWT_ISSUER = (
     os.environ["JWT_ISSUER"]
@@ -82,16 +80,24 @@ JWT_ISSUER = (
 
 # # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = env.bool('DEBUG',default=False)
-DEBUG=True
+DEBUG = True
 API_HOST = env("API_HOST")
 # ALLOWED_HOSTS = ["*"]
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
-    default=["*",API_HOST, "api", "localhost", "host.docker.internal", "singular-joey-normally.ngrok-free.app","oh-travel.southeastasia.cloudapp.azure.com"],
+    default=[
+        "*",
+        API_HOST,
+        "api",
+        "localhost",
+        "host.docker.internal",
+        "singular-joey-normally.ngrok-free.app",
+        "oh-travel.southeastasia.cloudapp.azure.com",
+    ],
 )
 
 # ALLOWED_HOSTS =['4.145.112.182','localhost','travel-app.southeastasia.cloudapp.azure.com','*']
-#ALLOWED_HOSTS = ["4.145.113.250",'localhost','travel-app.southeastasia.cloudapp.azure.com','4.145.112.182']
+# ALLOWED_HOSTS = ["4.145.113.250",'localhost','travel-app.southeastasia.cloudapp.azure.com','4.145.112.182']
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=True)
@@ -102,7 +108,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5173",
     "http://localhost:3001",
-    "http://127.0.0.1:3001", 
+    "http://127.0.0.1:3001",
     "http://4.145.112.182:8000",
 ]
 
@@ -148,14 +154,14 @@ LOCAL_APPS = (
     "attraction",
     "chat_history_saver",
     "social_auth",
-    "scrapy_api"
+    "scrapy_api",
 )
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",  # Notice the order
     "django.middleware.common.CommonMiddleware",
@@ -215,7 +221,6 @@ def db_config(prefix="", test=None):
         "TEST": test,
         "OPTIONS": {
             # "charset": "utf8mb4",
-        
         },
     }
 
@@ -304,7 +309,7 @@ EMAIL_DOMAIN = env("EMAIL_DOMAIN")
 LIMIT_DOMAIN = env.bool("LIMIT_DOMAIN")
 
 DEFAULT_OAUTH2_SCHEME = "http" if API_HOST in ["localhost", "127.0.0.1"] else "https"
-API_PORT='8000'
+API_PORT = "8000"
 DEFAULT_OAUTH2_PORT = ":" + API_PORT if API_PORT is not None else ""
 OAUTH2_URL = DEFAULT_OAUTH2_SCHEME + "://" + API_HOST + DEFAULT_OAUTH2_PORT
 
@@ -352,10 +357,10 @@ USE_TZ = True
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -365,7 +370,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 API_HOST = "localhost"
 API_PORT = 8000
 
-ALLOWED_HOSTS = [API_HOST, "api", "localhost", "host.docker.internal" , "singular-joey-normally.ngrok-free.app"]
+ALLOWED_HOSTS = [
+    API_HOST,
+    "api",
+    "localhost",
+    "host.docker.internal",
+    "singular-joey-normally.ngrok-free.app",
+]
 
 DEFAULT_CLIENT_SECRET = (
     os.environ["DEFAULT_CLIENT_SECRET"]
