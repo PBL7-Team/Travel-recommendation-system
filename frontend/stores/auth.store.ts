@@ -36,7 +36,7 @@ export const useAuthStore = defineStore({
                     let format_sub = sub.replace("-", '')
                     const currentTime = new Date();
                     this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
-                    const token = useCookie('accessToken',{ maxAge: result.data.expires_in * 1000 }); // useCookie new hook in nuxt 3
+                    const token = useCookie('accessToken', { maxAge: result.data.expires_in * 1000 }); // useCookie new hook in nuxt 3
                     token.value = this.$state.access_token
                     console.log(format_sub)
                     const userData = await this.getUserById(format_sub);
@@ -123,17 +123,19 @@ export const useAuthStore = defineStore({
         //         console.error(e)
         //     }
         // },
-        async getUserById(userId:string) {
+        async getUserById(userId: string) {
             try {
                 const response = await fetch(`${baseUrl}/api/v1/users/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'Authorization': `Bearer ${this.$state.access_token}`
+                        'Authorization': `Bearer ${this.$state.access_token}`,
+                        // 'ngrok-skip-browser-warning': 'skip-browser-warning'
                     }
                 });
-        
+                
+                console.log('response user: ',response)
                 if (response.ok) { // Checks if the status is in the range 200-299
                     const data = await response.json(); // Parse the JSON response
                     console.log('res:', data);

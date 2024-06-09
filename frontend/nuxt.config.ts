@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   runtimeConfig: {
     public: {
-      apiUrl: process.env.NUXT_API_URL
+      apiUrl: process.env.VITE_API_URL
     }
   },
   modules: [
@@ -26,6 +26,14 @@ export default defineNuxtConfig({
     define: {
       "process.env.DEBUG": false,
     },
+    // server: {
+    //   proxy: {
+    //     "/backend": {
+    //       target: "https://singular-joey-normally.ngrok-free.app/",
+    //       changeOrigin: true,
+    //     },
+    //   },
+    // }
   },
   nitro: {
     serveStatic: true,

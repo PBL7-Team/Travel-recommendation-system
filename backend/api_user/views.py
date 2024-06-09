@@ -1,13 +1,16 @@
 from django.shortcuts import render
 
 from rest_framework import generics, permissions, serializers
-
+from rest_framework import status
 from api_user.models.user import User
 from api_user.serializers import UserSerializer
 # Create your views here.
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from django.http import JsonResponse
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -41,4 +44,5 @@ class UserViewSet(viewsets.ModelViewSet):
         """Override retrieve to customize JSON response if needed"""
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        # return Response(serializer.data,status=status.HTTP_200_OK)
+        return JsonResponse(data=serializer.data,safe=False)
