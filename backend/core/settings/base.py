@@ -84,11 +84,11 @@ JWT_ISSUER = (
 # DEBUG = env.bool('DEBUG',default=False)
 DEBUG=True
 API_HOST = env("API_HOST")
-ALLOWED_HOSTS = ["*"]
-# ALLOWED_HOSTS = env.list(
-#     "DJANGO_ALLOWED_HOSTS",
-#     default=[API_HOST, "api", "localhost", "host.docker.internal", "singular-joey-normally.ngrok-free.app"],
-# )
+# ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = env.list(
+    "DJANGO_ALLOWED_HOSTS",
+    default=["*",API_HOST, "api", "localhost", "host.docker.internal", "singular-joey-normally.ngrok-free.app","oh-travel.southeastasia.cloudapp.azure.com"],
+)
 
 # ALLOWED_HOSTS =['4.145.112.182','localhost','travel-app.southeastasia.cloudapp.azure.com','*']
 #ALLOWED_HOSTS = ["4.145.113.250",'localhost','travel-app.southeastasia.cloudapp.azure.com','4.145.112.182']
