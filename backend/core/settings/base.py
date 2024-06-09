@@ -16,7 +16,7 @@ from os.path import join
 import environ
 from . import env, BASE_DIR
 
-from corsheaders.defaults import default_headers
+from corsheaders.defaults import default_headers,default_methods
 from ..scopes import scopes, default_scopes
 from api_oauth2.tokens import signed_token_generator
 
@@ -114,12 +114,10 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
-CORS_ALLOW_ALL_HEADERS = True
-# CORS_ALLOW_HEADERS = list(default_headers)
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    "http://localhost:3000",
-]
+CORS_ALLOW_HEADERS = list(default_headers)
+CORS_ALLOW_METHODS = list(default_methods)  # Bao gồm tất cả các phương thức HTTP chuẩn
+CORS_ALLOW_ALL_HEADERS = True  # Cho phép tất cả headers
+CORS_ALLOW_CREDENTIALS = True  # Cho phép gửi thông tin xác thực
 
 # Application definition
 
