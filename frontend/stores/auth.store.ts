@@ -138,14 +138,14 @@ export const useAuthStore = defineStore({
                 console.log('response user: ', response)
                 if (response.ok) { // Checks if the status is in the range 200-299
                     // Parse the JSON respons
-                    const data = await response.json(); 
+                    const data = await response.json();
                     console.log('res:', data);
                     return data;
                 } else {
                     console.error(`Server error ${response.status} when fetching user ${userId}`);
                     return null;
                 }
-               
+
             } catch (error) {
                 console.error('An error occurred while fetching user data:', error);
                 return null;
@@ -159,39 +159,46 @@ export const useAuthStore = defineStore({
             return this.isLoggedIn && new Date(this.expired_time) > new Date();
         },
         async logout() {
-            const formData = new FormData();
-            formData.append("access_token", this.access_token);
-            formData.append("refresh_token", this.refresh_token);
-            console.log("access_token: ", this.access_token)
-            console.log("refresh_token: ", this.refresh_token)
-            const res = await api.post(`/api/v1/logout`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${this.access_token}`
+            const accessToken = this.$state.access_token || localStorage.getItem('access_token');
+            const refreshToken = this.$state.refresh_token || localStorage.getItem('refresh_token');
+
+            if (!accessToken || !refreshToken) {
+                console.error('Access token or refresh token is missing.');
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append("access_token", accessToken);
+                formData.append("refresh_token", refreshToken);
+
+                const res = await api.post(`/api/v1/logout`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (res.status === 200) {
+                    // Xóa dữ liệu từ localStorage
+                    localStorage.clear();
+
+                    // Xóa token từ cookie
+                    const token = useCookie('accessToken');
+                    token.value = null;
+
+                    // Cập nhật trạng thái xác thực
+                    this.resetState();
+
+                    toast.add({
+                        title: 'Logout successfully',
+                        timeout: 5000,
+                    });
+                } else {
+                    console.error('Logout failed:', res.status, res.data);
                 }
-            });
-            console.log(res)
-            // const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
-            // this.isLoggedIn = false; // set authenticated  state value to false
-            // token.value = null
-            // this.resetState()
-            if (res.status === 200) {
-                // Clear all data from localStorage
-                localStorage.clear();
-
-                // Clear the token from cookies
-                const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
-                token.value = null;
-
-                // Update the authentication state
-                this.isLoggedIn = false; // Set authenticated state value to false
-                this.resetState(); // Reset any additional state if necessary
-                toast.add({
-                    title: 'Logout successfully',
-                    timeout: 5000,
-                })
-            } else {
-                console.error('Logout failed:', res.status, res.data);
+            } catch (error) {
+                console.error('Error during logout:', error);
             }
         },
 
@@ -209,13 +216,15 @@ export const useAuthStore = defineStore({
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-
+                
                 if (response.status === 200) {
+                    // console.log('res data', response.data)
                     this.$state.access_token = response.data.access_token;
                     this.$state.refresh_token = response.data.refresh_token;
                     const currentTime = new Date();
-                    this.$state.expired_time = new Date(currentTime.getTime() + response.data.expires_in * 1000).toISOString();
-
+                    const expiresIn = response.data.expires_in * 1000; // Đảm bảo thời gian là miligiây
+                    const expirationTime = new Date(currentTime.getTime() + expiresIn).toISOString();
+                    this.$state.expired_time = expirationTime;
                     // Update localStorage
                     localStorage.setItem('access_token', this.$state.access_token);
                     localStorage.setItem('refresh_token', this.$state.refresh_token);
@@ -230,7 +239,7 @@ export const useAuthStore = defineStore({
                     return false; // Refresh failed
                 }
             } catch (error) {
-                console.error('Error refreshing token:', error);
+                // console.error('Error refreshing token:', error);
                 return false;
             }
         },

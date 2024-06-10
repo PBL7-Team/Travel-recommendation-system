@@ -51,3 +51,8 @@ const asideLgCloseClick = (event) => {
     </div>
   </aside>
 </template>
+<style scoped>
+.aside {
+  @apply bg-white text-black
+}
+</style>

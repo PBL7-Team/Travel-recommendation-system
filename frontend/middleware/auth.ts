@@ -1,20 +1,30 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    const { isLoggedIn } = storeToRefs(useAuthStore()); // make authenticated state reactive
-    const accessToken = useCookie('accessToken'); // get token from cookies
-  
-    if (accessToken.value) {
-      // check if value exists
-      isLoggedIn.value = true; // update the state to authenticated
-    }
-  
-    // if token exists and url is /login redirect to homepage
-    if (accessToken.value && to?.name === 'login') {
-      return navigateTo('/');
-    }
-  
-    // if token doesn't exist redirect to log in
-    if (!accessToken.value && to?.name !== 'login') {
-      abortNavigation();
-      return navigateTo('/login');
-    }
-  });
+  const authStore = useAuthStore();
+  const { isLoggedIn, access_token } = storeToRefs(authStore);
+  const localAccessToken = useCookie('accessToken'); // lấy token từ cookie
+
+  // Đồng bộ trạng thái đăng nhập
+  if (localAccessToken.value) {
+    access_token.value = localAccessToken.value; // Gán giá trị từ cookie vào access_token
+    isLoggedIn.value = true; // Cập nhật trạng thái đã đăng nhập
+  } else {
+    isLoggedIn.value = false; // Cập nhật trạng thái chưa đăng nhập
+  }
+
+  // Nếu token tồn tại và trang đích là trang login, chuyển hướng về trang chủ
+  if (isLoggedIn.value && to?.name === 'login') {
+    return navigateTo('/');
+  }
+
+  // Nếu token không tồn tại và trang đích không phải là trang login, chuyển hướng về trang login
+  if (!isLoggedIn.value && to?.name !== 'login') {
+    abortNavigation();
+    return navigateTo('/auth/newlogin');
+  }
+
+  // Nếu token không tồn tại và trang đích là trang dashboard, chuyển hướng về trang login
+  if (!isLoggedIn.value && to?.name === 'dashboard') {
+    abortNavigation();
+    return navigateTo('/auth/newlogin');
+  }
+});

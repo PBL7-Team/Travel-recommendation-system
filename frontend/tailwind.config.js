@@ -5,24 +5,24 @@ export default {
     "./layouts/**/*.{html,js,vue,ts}",
     "./pages/**/*.{html,js,vue,ts}",
     "./plugins/**/*.{js,ts}",
-    "./configs/**/*.{js,ts}",  // Add this to apply colors
+    "./configs/**/*.{js,ts}", // Áp dụng cho các tệp trong configs
     "./app.vue",
     "./error.vue",
   ],
   theme: {
     extend: {
       colors: {
-        'blue':  {
+        blue: {
           500: '#3b82f6',
           950: '#17275c',
         },
-        'purple': '#7e5bef',
-        'pink': '#ff49db',
-        'orange': '#ff7849',
-        'green': '#13ce66',
-        'yellow': '#ffc82c',
+        purple: '#7e5bef',
+        pink: '#ff49db',
+        orange: '#ff7849',
+        green: '#13ce66',
+        yellow: '#ffc82c',
         'gray-dark': '#273444',
-        'gray': '#8492a6',
+        gray: '#8492a6',
         'gray-light': '#d3dce6',
       },
       boxShadow: {
@@ -30,8 +30,5 @@ export default {
       },
     },
   },
-
-
   plugins: [],
 }
-
