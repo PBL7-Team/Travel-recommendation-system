@@ -14,7 +14,7 @@ const { user: authUser } = storeToRefs(userStore);
 const messages = ref([
     {
         role: 'AI',
-        message: 'Hello! How can I help you?'
+        message: 'Xin chào! Tôi có thể giúp gì cho bạn?'
     },
     // {
     //     role: 'AI',
