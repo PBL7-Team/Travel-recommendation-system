@@ -70,8 +70,9 @@ def search_wikipedia(search_term):
         attraction_summary = data.get('message', {}).get('attraction_summary', 'No summary available')
         if attraction_summary == '' or 'N/A' or attraction_summary.endswith("Read more"):
             msg = search_wikipedia_1(search_term)
+            if msg.startswith("Bài này được viết như cẩm nang"):
+                    return "Dữ liệu của mình chưa cập nhật về địa điểm này. Bạn có thể thử tìm kiếm trên Google xem sao"
             return msg
-            return "Dữ liệu của mình chưa cập nhật về địa điểm này. Bạn có thể thử tìm kiếm trên Google xem sao"
         if attraction_summary.endswith("Đọc thêm"):
             attraction_summary = attraction_summary.replace("Đọc thêm", "").rstrip()
             
