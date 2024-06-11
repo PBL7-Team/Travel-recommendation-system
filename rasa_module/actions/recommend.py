@@ -26,7 +26,7 @@ def generate_recommendation_message(recommendations, num = None):
         return msg
     else:
         msg = "Dưới đây là danh sách địa điểm phù hợp:\n"
-        msg += "\n".join(recommendations)
+        msg += "\n".join(recommendations[:5])
         return msg
 
 def recommend_place(message,num):
