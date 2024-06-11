@@ -55,7 +55,7 @@ class GoogleSocialAuthView(OAuthLibMixin, ViewSet):
         permission_classes=[AllowAny],
         authentication_classes=[],
     )
-    def loginByGoogle(self, request,pk=None):
+    def loginByGoogle(self, request):
         """
         POST with "auth_token"
         Send an idtoken as from Google to get user information and return an access token.
@@ -65,7 +65,11 @@ class GoogleSocialAuthView(OAuthLibMixin, ViewSet):
 
         # Lấy thông tin người dùng từ token Google
         user_data = serializer.validated_data["user_data"]
-        print(user_data)
+        email = user_data.get("email")
+
+        if not email:
+            return Response({"error": "Invalid user data"}, status=status.HTTP_400_BAD_REQUEST)
+
         # Lấy thông tin người dùng hoặc tạo người dùng mới
         user_info = register_social_user(
             provider=user_data["provider"],
@@ -92,10 +96,10 @@ class GoogleSocialAuthView(OAuthLibMixin, ViewSet):
                 "scope": list_to_scope(scopes),
             }
         )
-
+        print('okay')
         # Tạo token OAuth2
         url, headers, body, status = self.create_token_response(request)
-
+        print('body',body)
         if status == 200:
             access_token = json.loads(body).get("access_token")
             if access_token:

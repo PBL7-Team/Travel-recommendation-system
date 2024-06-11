@@ -15,6 +15,15 @@ import FooterBar from '@/components/FooterBar.vue'
 definePageMeta({
     middleware: 'auth'
 })
+// Store
+import { useAuthStore } from '@/stores/auth.store';
+const userStore = useAuthStore()
+const { user: authUser } = storeToRefs(userStore);
+const { isLoggedIn } = storeToRefs(useAuthStore());
+onMounted(() => {
+  console.log('login?:', isLoggedIn.value)
+  // menu.value = menuNavBar
+})
 
 const { t, locale, locales, setLocale } = useI18n()
 import { useLanguageStore } from '~/stores/language'
@@ -42,6 +51,13 @@ const menuClick = (event, item) => {
 
   if (item.isLogout) {
     //
+    userStore.logout().then(() => {
+      // menu.value = createMenu(false)
+      router.push('/')
+    }).catch((err) => {
+      console.log('err')
+    })
+    
   }
 }
 </script>

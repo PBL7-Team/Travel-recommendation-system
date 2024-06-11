@@ -9,7 +9,7 @@
 img {
     vertical-align: middle;
     max-width: 100%;
-    display: inline-block;
+
     width: 260px;
     height: auto;
 }

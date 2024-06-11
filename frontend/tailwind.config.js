@@ -12,17 +12,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        'blue':  {
+        blue: {
           500: '#3b82f6',
           950: '#17275c',
         },
-        'purple': '#7e5bef',
-        'pink': '#ff49db',
-        'orange': '#ff7849',
-        'green': '#13ce66',
-        'yellow': '#ffc82c',
-        'gray-dark': '#273444',
-        'gray': '#8492a6',
+        purple: '#7e5bef',
+        pink: '#ff49db',
+        orange: '#ff7849',
+        green: '#13ce66',
+        yellow: '#ffc82c',
+        gray: '#8492a6',
+        'gray-dark': '#273444',     
         'gray-light': '#d3dce6',
       },
       boxShadow: {
