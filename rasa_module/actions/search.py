@@ -74,6 +74,7 @@ def search_wikipedia(search_term):
             return "Dữ liệu của mình chưa cập nhật về địa điểm này. Bạn có thể thử tìm kiếm trên Google xem sao"
         if attraction_summary.endswith("Đọc thêm"):
             attraction_summary = attraction_summary.replace("Đọc thêm", "").rstrip()
-        
+            
+        return attraction_summary
     else:
         print(f"Failed to get recommendations: {response.status_code}")
