@@ -55,3 +55,23 @@ def search_wikipedia(search_term):
 #         print(data)
 #     else:
 #         print(f"Failed to get recommendations: {response.status_code}")
+
+
+def search_wikipedia(search_term):
+    url = "http://flask-app.southeastasia.cloudapp.azure.com:8080/search"
+    
+    params = {'query': search_term}
+    headers = {'API-Key': 'PBL_7_Traveling'}
+    
+    response = requests.get(url, params=params, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        attraction_summary = data.get('message', {}).get('attraction_summary', 'No summary available')
+        if attraction_summary == '' or 'N/A' or attraction_summary.endswith("Read more"):
+            return "Dữ liệu của mình chưa cập nhật về địa điểm này. Bạn có thể thử tìm kiếm trên Google xem sao"
+        if attraction_summary.endswith("Đọc thêm"):
+            attraction_summary = attraction_summary.replace("Đọc thêm", "").rstrip()
+        
+    else:
+        print(f"Failed to get recommendations: {response.status_code}")
