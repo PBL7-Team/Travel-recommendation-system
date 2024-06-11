@@ -68,6 +68,7 @@ def search_wikipedia(search_term):
     if response.status_code == 200:
         data = response.json()
         attraction_summary = data.get('message', {}).get('attraction_summary', 'No summary available')
+        print(attraction_summary)
         if attraction_summary == '' or 'N/A' or attraction_summary.endswith("Read more"):
             msg = search_wikipedia_1(search_term)
             if msg.startswith("Bài này được viết như cẩm nang"):
