@@ -28,6 +28,7 @@ export const useAuthStore = defineStore({
                         'Content-Type': 'multipart/form-data'
                     }
                 });
+                console.log('result login: ', result)
                 if (result.status == 200) {
                     this.$state.access_token = result.data.access_token;
                     this.$state.refresh_token = result.data.refresh_token;
@@ -75,6 +76,7 @@ export const useAuthStore = defineStore({
                     'ngrok-skip-browser-warning': 'skip-browser-warning'
                 }
             });
+            console.log('result login GG: ', result)
             if (result.status == 200) {
                 this.$state.access_token = result.data.access_token;
                 this.$state.refresh_token = result.data.refresh_token;
