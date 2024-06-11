@@ -34,13 +34,13 @@ export const useAuthStore = defineStore({
                     this.$state.refresh_token = result.data.refresh_token;
                     this.$state.isLoggedIn = true;
                     const { sub, iat, exp, nbf, scope } = decodeToken(this.$state.access_token);
-                    let format_sub = sub.replace("-", '')
+                    // let format_sub = sub.replace("-", '')
                     const currentTime = new Date();
                     this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
                     const token = useCookie('accessToken', { maxAge: result.data.expires_in * 1000 }); // useCookie new hook in nuxt 3
                     token.value = this.$state.access_token
-                    console.log(format_sub)
-                    const userData = await this.getUserById(format_sub);
+                    console.log(sub)
+                    const userData = await this.getUserById(sub);
                     this.$state.user = userData;
 
                     // Persist the state to localStorage
@@ -82,12 +82,12 @@ export const useAuthStore = defineStore({
                 this.$state.refresh_token = result.data.refresh_token;
                 this.$state.isLoggedIn = true;
                 const { sub, iat, exp, nbf, scope } = decodeToken(this.$state.access_token);
-                let format_sub = sub.replace("-", '')
+                // let format_sub = sub.replace("-", '')
                 const currentTime = new Date();
                 this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
                 const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
                 token.value = this.$state.access_token
-                const userData = await this.getUserById(format_sub);
+                const userData = await this.getUserById(sub);
                 this.$state.user = userData;
 
                 // Persist the state to localStorage
