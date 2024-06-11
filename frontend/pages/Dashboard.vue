@@ -26,7 +26,7 @@ import SectionBannerStarOnGitHub from '@/components/SectionBannerStarOnGitHub.vu
 
 // Authentication
 definePageMeta({
-    middleware: 'auth'
+  middleware: 'auth'
 })
 
 const layout = "authenticated";
@@ -98,7 +98,7 @@ const transactionBarItems = computed(() => mainStore.history)
         </NotificationBar>
 
         <CardBox has-table>
-          <TableSampleClients />
+          <TableSampleClients checkable />
         </CardBox>
       </SectionMain>
     </NuxtLayout>

@@ -71,7 +71,7 @@ const sendPrompt = async () => {
     } else {
         messages.value.push({
             role: 'AI',
-            message: 'Sorry, an error occurred.'
+            message: 'Xin lỗi, hệ thống có sự cố. Mong bạn thử lại sau'
         });
     }
 
