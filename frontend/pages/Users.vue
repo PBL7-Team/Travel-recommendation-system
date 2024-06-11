@@ -3,8 +3,8 @@ const config = useRuntimeConfig();
 const baseUrl = config.public.apiUrl;
 import DataTable from '@/components/Table/DataTable.vue'
 import LayoutAuthenticated from '@/layouts/authenticated.vue'
-// const { users } = await useFetch('/api/users');
-import axios from 'axios';
+import axios from 'axios'
+
 import api from '@/stores/api';
 import { ref, onMounted } from 'vue';
 const users = ref([]);
@@ -17,7 +17,12 @@ const totalPages = ref(1)
 // const { data } = await useFetch('/api/users');
 onMounted(async () => {
     try {
-        const response = await axios.get(`http://singular-joey-normally.ngrok-free.app/api/v1/users/`);
+        const response = await axios.get(`${baseUrl}/api/v1/users/`, {
+            params: { page: currentPage.value },
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning'
+            }
+        });
         console.log('res: ', response)
         users.value = response.data.results;
         totalPages.value = response.data.num_pages
@@ -34,13 +39,27 @@ const headers = [
     { key: 'first_name', label: 'First name' },
     { key: 'last_name', label: 'Last name' },
 ];
+
+// Handle row check/uncheck
+const handleChecked = (isChecked: boolean, item: any) => {
+    if (isChecked) {
+        checkedRows.value.push(item);
+    } else {
+        checkedRows.value = checkedRows.value.filter(row => row.ID !== item.ID);
+    }
+};
+// Refetch data when page changes
+const refetch = async (pageNumber: number) => {
+    currentPage.value = pageNumber;
+    await fetchData();
+};
 </script>
 <template>
     <div>
         <LayoutAuthenticated>
             <!-- <div>{{data}}</div> -->
             <DataTable v-if="!loading" :items="users" :headers="headers" :currentPage="currentPage"
-                :totalPages="totalPages" />
+                :totalPages="totalPages" :checkable="true" @checked="checked" @page-changed="refetch" />
             <NuxtLoadingIndicator v-else />
         </LayoutAuthenticated>
     </div>
