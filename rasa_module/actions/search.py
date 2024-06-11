@@ -71,7 +71,7 @@ def search_wikipedia(search_term):
         print(attraction_summary)
         if attraction_summary == '' or 'N/A' or attraction_summary.endswith("Read more"):
             msg = search_wikipedia_1(search_term)
-            if msg.startswith("Bài này được viết như cẩm nang"):
+            if msg.startswith("Bài này được viết như cẩm nang") or msg.startswith("Tìm kiếm"):
                     return "Dữ liệu của mình chưa cập nhật về địa điểm này. Bạn có thể thử tìm kiếm trên Google xem sao"
             return msg
         if attraction_summary.endswith("Đọc thêm"):
