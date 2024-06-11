@@ -288,6 +288,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             }
         )
         url, headers, body, status = self.create_token_response(request)
+
         if status == 200:
             access_token = json.loads(body).get("access_token")
             if access_token is not None:
@@ -340,10 +341,6 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
        
         refresh_token = request.POST.get("refresh_token")
         access_token = request.POST.get("access_token")
-        print(
-            'hello: ',refresh_token,access_token
-        )
-        
         request.POST._mutable = True
         # revoke refresh_token first, to make user can not renew access_token
         request.POST.update(

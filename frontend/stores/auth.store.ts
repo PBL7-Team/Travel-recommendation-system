@@ -36,7 +36,7 @@ export const useAuthStore = defineStore({
                     let format_sub = sub.replace("-", '')
                     const currentTime = new Date();
                     this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
-                    const token = useCookie('accessToken',{ maxAge: result.data.expires_in * 1000 }); // useCookie new hook in nuxt 3
+                    const token = useCookie('accessToken', { maxAge: result.data.expires_in * 1000 }); // useCookie new hook in nuxt 3
                     token.value = this.$state.access_token
                     console.log(format_sub)
                     const userData = await this.getUserById(format_sub);
@@ -57,7 +57,7 @@ export const useAuthStore = defineStore({
 
             } catch (error) {
                 toast.add({
-                    title: 'Login unsuccessfully',
+                    title: 'Login failed',
                     description: 'Invalid username or password, please check again',
                     icon: 'i-octicon-desktop-download-24',
                     timeout: 10000,
@@ -69,9 +69,10 @@ export const useAuthStore = defineStore({
             const formData = new FormData();
             // formData.append("credential", credential);
             formData.append("access_token", credential);
-            const result = await api.post(`/api/v1/google/login/`, formData, {
+            const result = await axios.post(`${baseUrl}/api/v1/google/login/`, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'ngrok-skip-browser-warning': 'skip-browser-warning'
                 }
             });
             if (result.status == 200) {
@@ -98,45 +99,20 @@ export const useAuthStore = defineStore({
             }
             return result;
         },
-        // async getUserById(userId: string) {
-        //     const { data, error } = await useFetch(`${baseUrl}/api/v1/users/${userId}`);
-        //     console.log('getUserById',data.value)
-        //     return data.value;
-        // },
-        // async getUserById(userId: string) {
-        //     try {
-        //         let res = await api.get(`/api/v1/users/${userId}`, {
-        //             headers: {
-        //                 'Content-Type':'application/json',
-        //                 'Accept': 'application/json'
-        //             }
-        //         }
-        //         )
-        //         if (res.status == 200) {
-        //             console.log('res: ', res)
-        //             return res.data
-        //         } else {
-        //             console.error(`Server error ${res.status} when fetching user ${userId}`);
-        //         }
-        //         return null
-        //     } catch (e) {
-        //         console.error(e)
-        //     }
-        // },
-        async getUserById(userId:string) {
+        async getUserById(userId: string) {
             try {
                 const response = await fetch(`${baseUrl}/api/v1/users/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'Authorization': `Bearer ${this.$state.access_token}`
+                        'Authorization': `Bearer ${this.$state.access_token}`,
+                        'ngrok-skip-browser-warning': 'skip-browser-warning'
                     }
                 });
-        
+
                 if (response.ok) { // Checks if the status is in the range 200-299
                     const data = await response.json(); // Parse the JSON response
-                    console.log('res:', data);
                     return data;
                 } else {
                     console.error(`Server error ${response.status} when fetching user ${userId}`);
@@ -155,39 +131,46 @@ export const useAuthStore = defineStore({
             return this.isLoggedIn && new Date(this.expired_time) > new Date();
         },
         async logout() {
-            const formData = new FormData();
-            formData.append("access_token", this.access_token);
-            formData.append("refresh_token", this.refresh_token);
-            console.log("access_token: ", this.access_token)
-            console.log("refresh_token: ", this.refresh_token)
-            const res = await api.post(`/api/v1/logout`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${this.access_token}`
+            try {
+                const accessToken = this.$state.access_token
+                const refreshToken = this.$state.refresh_token
+                const formData = new FormData();
+                formData.append("access_token", accessToken);
+                formData.append("refresh_token", refreshToken);
+
+                const res = await api.post(`/api/v1/logout`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (res.status === 200) {
+                    // Xóa dữ liệu từ localStorage
+                    localStorage.clear();
+
+                    // Xóa token từ cookie
+                    const token = useCookie('accessToken');
+                    token.value = null;
+
+                    // Cập nhật trạng thái xác thực
+                    this.resetState();
+
+                    toast.add({
+                        title: 'Logout successfully',
+                        timeout: 5000,
+                    });
+                } else {
+                    // toast.add({
+                    //     title: 'Logout Failed',
+                    //     description: 'Server is rundown',
+                    //     icon: 'i-octicon-desktop-download-24',
+                    //     timeout: 10000,
+                    // })
+                    console.error('Logout failed:', res.status, res.data);
                 }
-            });
-            console.log(res)
-            // const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
-            // this.isLoggedIn = false; // set authenticated  state value to false
-            // token.value = null
-            // this.resetState()
-            if (res.status === 200) {
-                // Clear all data from localStorage
-                localStorage.clear();
-
-                // Clear the token from cookies
-                const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
-                token.value = null;
-
-                // Update the authentication state
-                this.isLoggedIn = false; // Set authenticated state value to false
-                this.resetState(); // Reset any additional state if necessary
-                toast.add({
-                    title: 'Logout successfully',
-                    timeout: 5000,
-                })
-            } else {
-                console.error('Logout failed:', res.status, res.data);
+            } catch (error) {
+                console.error('Error during logout:', error);
             }
         },
 
@@ -226,7 +209,6 @@ export const useAuthStore = defineStore({
                     return false; // Refresh failed
                 }
             } catch (error) {
-                console.error('Error refreshing token:', error);
                 return false;
             }
         },

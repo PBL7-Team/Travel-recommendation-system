@@ -24,9 +24,11 @@ import LayoutAuthenticated from '@/layouts/authenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import SectionBannerStarOnGitHub from '@/components/SectionBannerStarOnGitHub.vue'
 
-// definePageMeta({
-//   layout: 'authenticated'
-// })
+// Authentication
+definePageMeta({
+    middleware: 'auth'
+})
+
 const layout = "authenticated";
 
 

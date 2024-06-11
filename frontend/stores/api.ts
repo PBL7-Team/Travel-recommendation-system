@@ -9,6 +9,7 @@ api.interceptors.request.use(
     async (config) => {
         const authStore = useAuthStore();
 
+        console.log(authStore.$state.expired_time)
         // Check if the access token is expired
         if (new Date(authStore.$state.expired_time) <= new Date()) {
             const refreshed = await authStore.refreshAccessToken();
@@ -23,7 +24,6 @@ api.interceptors.request.use(
 
         // Set Authorization header
         config.headers['Authorization'] = `Bearer ${authStore.$state.access_token}`;
-        config.headers['Accept'] = 'application/json';
         return config;
     },
     (error) => Promise.reject(error)
