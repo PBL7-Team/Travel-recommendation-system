@@ -23,17 +23,14 @@ def generate_recommendation_message(recommendations, entity, num = None):
     if num:
         msg = "Dưới đây là danh sách địa điểm phù hợp:\n"
         msg += "\n".join(recommendations[:num])
+        msg += f"\n{{{entity}}}"
     else:
         num_recommendations = min(5, len(recommendations))
         msg = "Dưới đây là danh sách địa điểm phù hợp:\n"
         msg += "\n".join(recommendations[:num_recommendations])
-
-    message= {
-        "message": msg,
-        "entity": entity
-    }
-    print(message)
-    return message
+        msg += f"\n{{{entity}}}"
+        
+    return msg
 
 def recommend_place(message,num):
     url = "http://flask-app.southeastasia.cloudapp.azure.com:8080/recommend"
