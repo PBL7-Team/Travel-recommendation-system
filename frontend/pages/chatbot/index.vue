@@ -6,7 +6,7 @@ const userStore = useAuthStore()// use authenticateUser action from  auth store
 const { user: authUser } = storeToRefs(userStore);
 
 // test keyphrase extraction
-const keyphrases = ref([]);
+const keyphrases = ref('');
 
 
 const messages = ref([
@@ -66,7 +66,7 @@ const sendPrompt = async () => {
 
         if (keyphraseMatch) {
             const extractedKeyphrases = keyphraseMatch[1];
-            keyphrases.value.push(...extractedKeyphrases.split(','));
+            keyphrases.value = extractedKeyphrases
             systemAnswer = systemAnswer.replace(/\{\[.*?\]\}/, '');
         }
         messages.value.push({
@@ -96,7 +96,6 @@ function processMessage(message) {
 </script>
 
 <template>
-    <!-- <Navbar /> -->
     <NuxtLayout>
         <div class="max-w-xl mx-auto text-black">
             <!-- <a href="https://vercel.com/templates/next.js/blob-sveltekit"
@@ -110,13 +109,15 @@ function processMessage(message) {
                     <div class="h-full overflow-auto chat-messages">
                         <div v-for="(message, i) in messages" :key="i" class="flex flex-col p-4">
                             <div v-if="message.role === 'AI'" class="pr-8 mr-auto">
-                                <div class="p-2 mt-1 text-sm text-gray-700 bg-gray-200 rounded-lg text-smp-2">
+                                <div
+                                    class="p-2 mt-1 text-sm text-gray-700 bg-gray-200 rounded-lg text-smp-2 select-text hover:select-all">
                                     <!-- {{ message.message }} -->
                                     <span v-html="processMessage(message.message)"></span>
                                 </div>
                             </div>
                             <div v-else class="pl-8 ml-auto">
-                                <div class="p-2 mt-1 text-sm text-white bg-blue-400 rounded-lg">
+                                <div
+                                    class="p-2 mt-1 text-sm text-white bg-blue-400 rounded-lg select-text hover:select-all">
                                     <!-- {{ message.message }} -->
                                     <span v-html="processMessage(message.message)"></span>
                                 </div>

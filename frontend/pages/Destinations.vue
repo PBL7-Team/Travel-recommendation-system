@@ -53,8 +53,14 @@ async function fetchData() {
 
 const fetchAndSaveAttractions = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/api/v1/attractions/fetch-and-save`);
-    if (response.status === 201) {
+    const response = await axios.get(`${baseUrl}/api/v1/attractions/fetch-and-save`,
+      {
+        headers: {
+          'ngrok-skip-browser-warning': 'skip-browser-warning',
+        }
+      }
+    );
+    if (response.status === 200 || response.status === 201 || response.status === 301) {
       console.log('Attractions fetched and saved successfully!');
       toast.add({
         title: 'Attractions fetched and saved successfully!',
@@ -66,7 +72,7 @@ const fetchAndSaveAttractions = async () => {
         title: 'Error!',
         timeout: 10000,
       })
-      console.error('Failed to fetch and save attractions.');
+      console.error(`${response.status} - Failed to fetch and save attractions:${response.data}`);
     }
   } catch (error) {
     console.error('An error occurred while fetching and saving attractions:', error);
