@@ -8,13 +8,27 @@ const baseUrl = config.public.apiUrl;
 
 const startCrawl = async () => {
     try {
-        const response = await axios.get(`${baseUrl}/start-crawl`)
-        toast.add({
-            title: 'The data is crawling',
-            description: response.data.message || 'Wait for a few minutes',
-            timeout: 10000,
+        const response = await axios.get(`${baseUrl}/api/v1/start-crawl`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+            }
         })
-    } catch (error) {
+        if (response.status == 200) {
+            toast.add({
+                title: response.data.message,
+                description: `${response.data.new_json_amount} new file json received`,
+                timeout: 10000,
+            })
+        } else {
+            toast.add({
+                title: response.data.message|| 'Error while get crawl info',
+                // description: `${response.data.new_json_amount} new file json received`,
+                timeout: 10000,
+            })
+        }
+        console.log('res: ', response)
+    }
+    catch (error) {
         toast.add({
             title: 'Error',
             description: error.response?.data.message || 'Failed to start crawl',
@@ -25,7 +39,12 @@ const startCrawl = async () => {
 
 const calculateScore = async () => {
     try {
-        const response = await axios.get(`${baseUrl}/sentiment-calculate`)
+        const response = await axios.get(`${baseUrl}/api/v1/sentiment-calculate`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+
+            }
+        })
         toast.add({
             title: 'Calculation started',
             description: response.data.message || 'The sentiment scoring is in progress.',
@@ -42,7 +61,13 @@ const calculateScore = async () => {
 
 const getCrawlInfo = async () => {
     try {
-        const response = await axios.get(`${baseUrl}/get-crawl-info`)
+        const response = await axios.get(`${baseUrl}/api/v1/get-crawl-info`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+
+            }
+        })
+        console.log('get crawl info', response)
         toast.add({
             title: 'Fetching Crawl Info',
             description: response.data.message || 'Fetching the latest crawl information.',
@@ -58,7 +83,12 @@ const getCrawlInfo = async () => {
 }
 const cancelCrawl = async () => {
     try {
-        const response = await axios.get(`${baseUrl}/stop-crawl`)
+        const response = await axios.get(`${baseUrl}/api/v1/stop-crawl`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+
+            }
+        })
         toast.add({
             title: 'Crawl Canceled',
             description: response.data.message || 'The crawling has been canceled.',

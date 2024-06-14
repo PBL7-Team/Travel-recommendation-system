@@ -5,9 +5,9 @@ import { useAuthStore } from '@/stores/auth.store';
 const userStore = useAuthStore()// use authenticateUser action from  auth store
 const { user: authUser } = storeToRefs(userStore);
 
-// onMounted(()=>{
-//     console.log('authUser',authUser)
-// })
+// test keyphrase extraction
+const keyphrases = ref('');
+
 
 const messages = ref([
     {
@@ -34,6 +34,8 @@ const sendPrompt = async () => {
         message: message.value
     });
 
+    // // Extract keyphrases
+    // keyphrases.value = extractKeyphrases(message.value);
     message.value = '';
     scrollToEnd();
 
@@ -58,9 +60,18 @@ const sendPrompt = async () => {
     if (res.status === 200 || res.status === 201) {
         const response = await res.json();
         console.log('res', response)
+        // Extract keyphrases from AI's system_answer and clean the message
+        let systemAnswer = response?.system_answer || '';
+        const keyphraseMatch = systemAnswer.match(/\{\[(.*?)\]\}/);
+
+        if (keyphraseMatch) {
+            const extractedKeyphrases = keyphraseMatch[1];
+            keyphrases.value = extractedKeyphrases
+            systemAnswer = systemAnswer.replace(/\{\[.*?\]\}/, '');
+        }
         messages.value.push({
             role: 'AI',
-            message: response?.system_answer
+            message: systemAnswer
         });
     } else {
         messages.value.push({
@@ -85,7 +96,6 @@ function processMessage(message) {
 </script>
 
 <template>
-    <!-- <Navbar /> -->
     <NuxtLayout>
         <div class="max-w-xl mx-auto text-black">
             <!-- <a href="https://vercel.com/templates/next.js/blob-sveltekit"
@@ -99,13 +109,15 @@ function processMessage(message) {
                     <div class="h-full overflow-auto chat-messages">
                         <div v-for="(message, i) in messages" :key="i" class="flex flex-col p-4">
                             <div v-if="message.role === 'AI'" class="pr-8 mr-auto">
-                                <div class="p-2 mt-1 text-sm text-gray-700 bg-gray-200 rounded-lg text-smp-2">
+                                <div
+                                    class="p-2 mt-1 text-sm text-gray-700 bg-gray-200 rounded-lg text-smp-2 select-text hover:select-all">
                                     <!-- {{ message.message }} -->
                                     <span v-html="processMessage(message.message)"></span>
                                 </div>
                             </div>
                             <div v-else class="pl-8 ml-auto">
-                                <div class="p-2 mt-1 text-sm text-white bg-blue-400 rounded-lg">
+                                <div
+                                    class="p-2 mt-1 text-sm text-white bg-blue-400 rounded-lg select-text hover:select-all">
                                     <!-- {{ message.message }} -->
                                     <span v-html="processMessage(message.message)"></span>
                                 </div>
@@ -118,7 +130,7 @@ function processMessage(message) {
                     <form @submit.prevent="sendPrompt">
                         <div class="flex items-center w-full p-4">
                             <input v-model="message" type="text" placeholder="Type here..."
-                                class="w-full p-1 text-sm text-black bg-transparent bg-gray-100 border rounded-md shadow border-white/40 grow" />
+                                class="w-full p-3 text-sm text-black bg-transparent bg-gray-100 border rounded-md shadow border-white/40 grow" />
                             <button :disabled="loading" type="submit"
                                 class="flex items-center justify-center flex-none w-10 h-10 ml-2 bg-green-500 rounded-full">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -133,23 +145,10 @@ function processMessage(message) {
                     </form>
                 </div>
             </div>
-            <div class="flex flex-col justify-center w-full my-4">
-                <div class="flex items-center justify-center my-2">
-                    <span>Built with</span>
-                    <a href="https://openai.com/blog/gpt-3-apps"
-                        class="flex items-center mx-1 font-medium underline transition-colors underline-offset-4 hover:text-black/70">
-                        <p>LLM</p>
-                    </a>
-                    <span>and</span>
-                    <a href="https://nuxt.com/docs"
-                        class="flex items-center font-medium underline transition-colors underline-offset-4 hover:text-black/70">
-                        <!-- <img src="/nuxt.svg" class="h-6 mx-2" /> -->
-                        <p class="h-6 mx-2">Nuxt</p>
-                    </a>
-                    .
-                </div>
-
-
+            <!-- Add a textarea for keyphrases -->
+            <div class="mt-4">
+                <h4 class="text-lg text-center">Keyphrases</h4>
+                <textarea v-model="keyphrases" readonly class="w-full p-2 border rounded-md shadow"></textarea>
             </div>
 
             <!--  -->
@@ -178,6 +177,7 @@ function processMessage(message) {
                     </div>
                 </div>
             </div>
+
 
         </div>
     </NuxtLayout>
@@ -211,5 +211,16 @@ function processMessage(message) {
     75% {
         box-shadow: 14px 0 0 2px, 38px 0 0 -2px;
     }
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+    margin-top: 8px;
+    padding: 8px;
+    border: 1px solid #d3d3d3;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
 }
 </style>
