@@ -56,7 +56,22 @@ const getCrawlInfo = async () => {
         })
     }
 }
-
+const cancelCrawl = async () => {
+    try {
+        const response = await axios.get(`${baseUrl}/cancel-crawl`)
+        toast.add({
+            title: 'Crawl Canceled',
+            description: response.data.message || 'The crawling has been canceled.',
+            timeout: 10000,
+        })
+    } catch (error) {
+        toast.add({
+            title: 'Error',
+            description: error.response?.data.message || 'Failed to cancel crawl',
+            timeout: 5000,
+        })
+    }
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -76,7 +91,11 @@ const getCrawlInfo = async () => {
                     Calculate score
                 </button>
             </CardBox>
-
+            <CardBox>
+                <button @click="cancelCrawl" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-700">
+                    Cancel crawl
+                </button>
+            </CardBox>
         </div>
     </LayoutAuthenticated>
 </template>
