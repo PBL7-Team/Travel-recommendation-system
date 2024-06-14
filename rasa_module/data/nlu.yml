@@ -93,6 +93,20 @@ nlu:
       - Tôi muốn tìm các địa điểm tham quan miễn phí ở Hà Nội.
       - Cho tôi địa điểm du lịch hay ho [nhất](number) tại Việt Nam.
       - Chả biết nữa, nói thử [vài](number) địa điểm gì đó xem nào.
+      - Cho tôi địa điểm về biển
+      - Đà Nẵng có gì
+      - Hội an có gì đẹp
+      - du lịch ở Huế
+      - điểm đến ở Hà Nội
+      - điểm đến ở Sài Gòn
+      - quán ăn nào ở Đà Nẵng ngon
+      - Giới thiệu về địa điểm du lịch vui chơi ở Nghệ An
+      - Địa điểm du lịch ở Quảng Bình
+      - Thăng Long có gì
+      - Quảng Ninh có nơi nào vui chơi không
+      - Điểm đến ở Quảng Nam
+      - Nổi tiếng nhất Hội An là ở đâu
+      - Vui chơi ở đâu là vui nhất
 
   - intent: greet
     examples: |
