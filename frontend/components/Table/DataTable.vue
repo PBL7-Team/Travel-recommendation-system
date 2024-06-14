@@ -82,9 +82,9 @@ const handleClickSyncData = () => {
             </button>
         </div>
         <div v-if="isDestination" class="mt-4 text-gray-600 dark:text-gray-400">
-            Total Reviews: {{ props.totalReviews }}
+            Total Destinations: {{ props.totalReviews }}
             <span class="mx-2">|</span>
-            Total Raw Reviews: {{ props.totalRawReviews }}
+            Total Unresolved Destinations: {{ props.totalRawReviews }}
         </div>
         <table
             class="w-full border border-collapse border-round-sm text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4">

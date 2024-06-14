@@ -41,8 +41,8 @@ async function fetchData() {
       const data = response.data;
       destinations.value = data.results.data;
       totalPages.value = data.totalPages;
-      totalReviews.value = data.results.total_reviews;
-      totalRawReviews.value = data.results.total_raw_reviews;
+      totalReviews.value = data.count;
+      totalRawReviews.value = data.results.raw_reviews_count;
     } else {
       console.error("Failed to fetch data with status:", response.status);
     }

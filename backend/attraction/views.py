@@ -16,11 +16,16 @@ import requests
 from rest_framework import viewsets, permissions
 from django.db.models import Sum
 
+
 class AttractionViewSet(viewsets.ModelViewSet):
     queryset = Attraction.objects.all()
     serializer_class = AttractionSerializer
     permission_classes = [permissions.AllowAny]
     pagination_class = LargeResultsSetPagination
+
+    @staticmethod
+    def count_records_with_raw_review(queryset):
+        return queryset.filter(review_count_non_calc__gt=0).count()
 
     @action(detail=False, methods=["post"], parser_classes=[FileUploadParser])
     def load_from_file(self, request):
@@ -105,6 +110,8 @@ class AttractionViewSet(viewsets.ModelViewSet):
             ]
             or 0
         )
+        # Đếm số lượng bản ghi có raw review lớn hơn 0
+        count_raw_reviews_gt_zero = self.count_records_with_raw_review(queryset)
 
         # Phân trang dữ liệu
         page = self.paginate_queryset(queryset)
@@ -113,6 +120,7 @@ class AttractionViewSet(viewsets.ModelViewSet):
             response_data = {
                 "total_reviews": total_reviews,
                 "total_raw_reviews": total_raw_reviews,
+                "raw_reviews_count": count_raw_reviews_gt_zero,
                 "data": serializer.data,
             }
             return self.get_paginated_response(response_data)
