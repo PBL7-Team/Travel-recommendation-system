@@ -110,16 +110,13 @@ function processMessage(message) {
                         <div v-for="(message, i) in messages" :key="i" class="flex flex-col p-4">
                             <div v-if="message.role === 'AI'" class="pr-8 mr-auto">
                                 <div
-                                    class="p-2 mt-1 text-sm text-gray-700 bg-gray-200 rounded-lg text-smp-2 select-text hover:select-all">
-                                    <!-- {{ message.message }} -->
-                                    <span v-html="processMessage(message.message)"></span>
+                                    class="p-2 mt-1 text-sm text-gray-700 bg-gray-200 rounded-lg text-smp-2 select-text cursor-text">
+                                    <span class="select-text" v-html="processMessage(message.message)"></span>
                                 </div>
                             </div>
                             <div v-else class="pl-8 ml-auto">
-                                <div
-                                    class="p-2 mt-1 text-sm text-white bg-blue-400 rounded-lg select-text hover:select-all">
-                                    <!-- {{ message.message }} -->
-                                    <span v-html="processMessage(message.message)"></span>
+                                <div class="p-2 mt-1 text-sm text-white bg-blue-400 rounded-lg select-text cursor-text">
+                                    <span class="select-text" v-html="processMessage(message.message)"></span>
                                 </div>
                             </div>
                         </div>
@@ -130,7 +127,7 @@ function processMessage(message) {
                     <form @submit.prevent="sendPrompt">
                         <div class="flex items-center w-full p-4">
                             <input v-model="message" type="text" placeholder="Type here..."
-                                class="w-full p-3 text-sm text-black bg-transparent bg-gray-100 border rounded-md shadow border-white/40 grow" />
+                                class="w-full p-3 text-sm text-black bg-transparent bg-gray-100 border rounded-md shadow border-white/40 grow select-text cursor-text" />
                             <button :disabled="loading" type="submit"
                                 class="flex items-center justify-center flex-none w-10 h-10 ml-2 bg-green-500 rounded-full">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -222,5 +219,17 @@ textarea {
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
+}
+
+.select-text {
+    user-select: text;
+    /* Cho phép người dùng chọn văn bản */
+}
+
+.select-text::selection {
+    background-color: #d3d3d3;
+    /* Màu nền khi chọn văn bản */
+    color: #000;
+    /* Màu văn bản khi chọn */
 }
 </style>
