@@ -75,6 +75,11 @@ stories:
       - intent: bye
       - action: utter_bye
 
+  - story: recommend_place
+    steps:
+      - intent: recommend_place
+      - action: action_recommend_place
+
   - story: Cảm ơn
     steps:
       - intent: thank
