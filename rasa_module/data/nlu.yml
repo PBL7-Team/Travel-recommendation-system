@@ -107,6 +107,26 @@ nlu:
       - Điểm đến ở Quảng Nam
       - Nổi tiếng nhất Hội An là ở đâu
       - Vui chơi ở đâu là vui nhất
+      - Ở Huế có quán ăn nào nổi tiếng không?
+      - Nên đi đâu khi du lịch Phú Quốc?
+      - Địa điểm check-in đẹp ở Hà Nội là gì?
+      - Chơi gì ở Sài Gòn vào buổi tối?
+      - Quán cà phê nào ở Đà Lạt có view đẹp?
+      - Món ăn đặc sản ở Cần Thơ là gì?
+      - Những nơi nào ở Nha Trang có bãi biển đẹp?
+      - Đi đâu để trải nghiệm văn hóa Hội An?
+      - Địa điểm du lịch sinh thái ở Miền Tây?
+      - Nhà hàng nào ở Hải Phòng phục vụ hải sản tươi ngon?
+      - Có điểm tham quan nào thú vị ở Bình Dương không?
+      - Những chợ đêm nổi tiếng ở Đà Nẵng?
+      - Các khu vui chơi giải trí ở Bình Thuận?
+      - Nên đến thăm nơi nào ở Tây Ninh?
+      - Khu du lịch sinh thái ở Đồng Tháp có gì hấp dẫn?
+      - Địa điểm nào ở Phan Thiết có cảnh đẹp?
+      - Quán bar nào ở Vũng Tàu có không khí sôi động?
+      - Địa điểm du lịch lịch sử ở Quảng Trị là gì?
+      - Cắm trại ở đâu tại Đà Lạt là lý tưởng nhất?
+      - Khu vui chơi nào ở Bình Định phù hợp cho gia đình?
 
   - intent: greet
     examples: |
