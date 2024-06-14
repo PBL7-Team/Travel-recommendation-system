@@ -55,7 +55,9 @@ def recommend_place(message,num):
             else:
                 return generate_recommendation_message(recommendations,entity)
         else:
-            return "Không tìm thấy địa điểm phù hợp"
+            msg = "Không tìm thấy địa điểm phù hợp "
+            msg += f"\n{{{entity}}}"
+            return msg
     else:
         print(f"Failed to get recommendations: {response.status_code}")
     
