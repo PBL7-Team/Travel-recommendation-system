@@ -11,16 +11,14 @@ const users = ref([]);
 const loading = ref(false);
 const currentPage = ref(1)
 const totalPages = ref(1)
-// onMounted(() => {
-//     console.log('user: ', users)
-// })
-// const { data } = await useFetch('/api/users');
-onMounted(async () => {
+const checkedRows = ref<any[]>([]);
+async function fetchData() {
     try {
         const response = await axios.get(`${baseUrl}/api/v1/users/`, {
             params: { page: currentPage.value },
             headers: {
-                'ngrok-skip-browser-warning': 'skip-browser-warning'
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+
             }
         });
         console.log('res: ', response)
@@ -31,10 +29,11 @@ onMounted(async () => {
     } finally {
         loading.value = false;
     }
-});
+}
+onMounted(fetchData);
 
 const headers = [
-    { key: 'ID', label: 'ID' },
+    // { key: 'id', label: 'ID' },
     { key: 'email', label: 'Email' },
     { key: 'first_name', label: 'First name' },
     { key: 'last_name', label: 'Last name' },
