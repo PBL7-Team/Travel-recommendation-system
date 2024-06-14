@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import Navbar from '@/components/DefaultNavbar.vue'
-import Footer from '@/components/IndexFooter.vue'
 import {mdiArrowTopRight} from '@mdi/js'
 import BaseIcon from '~/components/BaseIcon.vue';
 import image from '@/assets/images/travel_bg.jpg'
