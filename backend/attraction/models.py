@@ -12,6 +12,7 @@ class Attraction(models.Model):
     star_ratings = models.JSONField(null=True)
     location = models.JSONField(null=True)
     reviews_time = models.JSONField(null=True)
+    review_count_non_calc= models.IntegerField(default=0)
     
     class Meta:
         db_table = "attractions"
