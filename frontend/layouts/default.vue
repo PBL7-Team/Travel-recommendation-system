@@ -1,5 +1,4 @@
 <script setup>
-import Navbar from '@/components/DefaultNavbar.vue'
 import Footer from '@/components/IndexFooter.vue'
 import menuNavBar, { createLoggedOutMenu } from '~/configs/menuNavBar.js'
 import { mdiBackburger, mdiForwardburger, mdiMenu, mdiAccount, mdiCogOutline, mdiEmail, mdiLogout } from '@mdi/js'

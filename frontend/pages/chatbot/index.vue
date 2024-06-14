@@ -1,6 +1,4 @@
 <script setup>
-import Navbar from '@/components/DefaultNavbar.vue'
-import Footer from '@/components/IndexFooter.vue'
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiUrl;
 import { useAuthStore } from '@/stores/auth.store';
@@ -14,12 +12,8 @@ const { user: authUser } = storeToRefs(userStore);
 const messages = ref([
     {
         role: 'AI',
-        message: 'Hello! How can I help you?'
+        message: 'Xin chào! Tôi có thể giúp gì cho bạn?'
     },
-    // {
-    //     role: 'AI',
-    //     message: 'Hello! How can I help you?1'
-    // }
 ]);
 const loading = ref(false);
 const message = ref('');
@@ -71,7 +65,7 @@ const sendPrompt = async () => {
     } else {
         messages.value.push({
             role: 'AI',
-            message: 'Sorry, an error occurred.'
+            message: 'Xin lỗi, hệ thống có sự cố. Mong bạn thử lại sau'
         });
     }
 

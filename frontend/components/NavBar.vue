@@ -32,32 +32,6 @@ const isMenuNavBarActive = ref(false)
 
 // const isDropdown = ref(false)
 
-// const profileItem = ref({
-//   menu: [
-//     {
-//       icon: mdiAccount,
-//       label: 'My Profile',
-//       to: '/profile'
-//     },
-//     {
-//       icon: mdiCogOutline,
-//       label: 'Settings'
-//     },
-//     {
-//       icon: mdiEmail,
-//       label: 'Messages'
-//     },
-//     {
-//       isDivider: true
-//     },
-//     {
-//       icon: mdiLogout,
-//       label: 'Log Out',
-//       isLogout: true
-//     }
-//   ]
-// })
-
 </script>
 
 <template>

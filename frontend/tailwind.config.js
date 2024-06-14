@@ -20,9 +20,11 @@ export default {
         pink: '#ff49db',
         orange: '#ff7849',
         green: '#13ce66',
+        'green-500': '#10b981',
         yellow: '#ffc82c',
-        'gray-dark': '#273444',
         gray: '#8492a6',
+        'gray-50': '#f9fafb',
+        'gray-dark': '#273444',
         'gray-light': '#d3dce6',
       },
       boxShadow: {

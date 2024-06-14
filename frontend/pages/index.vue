@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import Navbar from '@/components/DefaultNavbar.vue'
-import Footer from '@/components/IndexFooter.vue'
+import {mdiArrowTopRight} from '@mdi/js'
+import BaseIcon from '~/components/BaseIcon.vue';
 import image from '@/assets/images/travel_bg.jpg'
 import { ref, onMounted, onUnmounted } from 'vue';
 
@@ -14,9 +14,9 @@ definePageMeta({
 
 
 const sentences = ref<string[]>([
-  'This is the first sentence.',
-  'Here is another sentence.',
-  'This is yet another sentence.'
+  'Find exciting travel destinations for adventurous trip',
+  'Suggest serene travel spots for couples seeking tranquility.',
+  "Recommend culturally enriching destinations for exploration."
 ]);
 
 const typedSentences = ref<string[]>(Array(sentences.value.length).fill(''));
@@ -112,7 +112,7 @@ const faqItems = ref([
   // Add more FAQ items here in the same format
 ]);
 
-const toggleFaq = (index:number) => {
+const toggleFaq = (index: number) => {
   faqItems.value[index].isOpen = !faqItems.value[index].isOpen;
 };
 
@@ -172,29 +172,29 @@ const toggleFaq = (index:number) => {
           <h2 class="SectionTitle_sectionTitle__i5qvD BucketListSection_title__lQfYg">Your travel bucketlist starts here
           </h2>
           <h3 class="SectionDescription_sectionDescription__iNgJ2">
-            <a class="BucketListSection_bucketList__subtitleRA__VMMyq" href="/roamaround">Roam Around</a> is now Layla.
+            <a class="BucketListSection_bucketList__subtitleRA__VMMyq" href="/roamaround">Roam Around</a> is now
+            OhTravel.
             Share where you're headed, and I'll craft an itinerary just for you.
           </h3>
         </div>
-        <div class="SearchInput_input_wrapper__S87AR">
+        <div class="SearchInput_input_wrapper">
           <input placeholder="Where to?" class="SearchInput_input__zM_0J" value="">
-          <button disabled="" class="SearchInput_button__n_YGO SearchInput_disabled__iG2Nb">
-            <img alt="search" loading="lazy" width="22" height="20" decoding="async" data-nimg="1"
-              src="https://justasklayla.com/_next/static/media/search.c379aeab.svg" style="color: transparent;">
+          <button class="SearchInput_button SearchInput_disabled">
+            <!-- <img alt="search" loading="lazy" width="22" height="20" decoding="async" data-nimg="1"
+              src="https://justasklayla.com/_next/static/media/search.c379aeab.svg" style="color: transparent;"> -->
+              <BaseIcon :path="mdiArrowTopRight"/>
           </button>
         </div>
         <div class="BucketListSection_cards">
           <div class="Card_wrapper__yopvl Card_wrapperHover__9jHB0">
             <div class="Card_container__dYkWR">
               <div class="Card_videoWrapper__Jpvu1">
-                <video class="Card_video__WzswZ"
-                  src="https://cdn.dev.beautifuldestinations.app/4972dee9-6942-4497-9965-60cf398b1397/original.mp4"
-                  preload="none" autoplay="" loop="" playsinline=""
-                  poster="https://cdn.dev.beautifuldestinations.app/4972dee9-6942-4497-9965-60cf398b1397/midThumbnail.jpg"></video>
+                <video class="Card_video__WzswZ" src="@/assets/videos/dest1.mp4" preload="none" autoplay loop
+                  playsinline></video>
               </div>
               <div class="Card_bottom">
                 <div class="Card_info">
-                  <span class="Card_destination">5-Day Adventure in Goa</span>
+                  <span class="Card_destination">Saigon Cao Dai Temple</span>
                   <span class="Card_date__Pudsn">Jun 2-Jun 6</span>
                 </div>
                 <button
@@ -207,14 +207,12 @@ const toggleFaq = (index:number) => {
           <div class="Card_wrapper__yopvl Card_wrapperHover__9jHB0">
             <div class="Card_container__dYkWR">
               <div class="Card_videoWrapper__Jpvu1">
-                <video class="Card_video__WzswZ"
-                  src="https://cdn.dev.beautifuldestinations.app/4972dee9-6942-4497-9965-60cf398b1397/original.mp4"
-                  preload="none" autoplay="" loop="" playsinline=""
-                  poster="https://cdn.dev.beautifuldestinations.app/207d31fa-a78a-4c48-a310-769f3c34a828/midThumbnail.jpg"></video>
+                <video class="Card_video__WzswZ" src="@/assets/videos/dest2.mp4" preload="none" autoplay loop
+                  playsinline></video>
               </div>
               <div class="Card_bottom">
                 <div class="Card_info">
-                  <span class="Card_destination">5-Day Adventure in Thailand</span>
+                  <span class="Card_destination">Son Bac Valley</span>
                   <span class="Card_date__Pudsn">Jun 2-Jun 6</span>
                 </div>
                 <button
@@ -227,14 +225,31 @@ const toggleFaq = (index:number) => {
           <div class="Card_wrapper__yopvl Card_wrapperHover__9jHB0">
             <div class="Card_container__dYkWR">
               <div class="Card_videoWrapper__Jpvu1">
-                <video class="Card_video__WzswZ"
-                  src="https://cdn.dev.beautifuldestinations.app/4972dee9-6942-4497-9965-60cf398b1397/original.mp4"
-                  preload="none" autoplay="" loop="" playsinline=""
+                <video class="Card_video__WzswZ" src="@/assets/videos/dest3.mp4" preload="none" autoplay loop
+                  playsinline
                   poster="https://cdn.dev.beautifuldestinations.app/207d31fa-a78a-4c48-a310-769f3c34a828/midThumbnail.jpg"></video>
               </div>
               <div class="Card_bottom">
                 <div class="Card_info">
-                  <span class="Card_destination">5-Day Adventure in Thailand</span>
+                  <span class="Card_destination">The Road at Night time</span>
+                  <span class="Card_date__Pudsn">Jun 2-Jun 6</span>
+                </div>
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Card_button__1LjEC css-1ujsas3"
+                  tabindex="0" type="button">Explore<span class="MuiTouchRipple-root css-w0pj6f"></span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="Card_wrapper__yopvl Card_wrapperHover__9jHB0">
+            <div class="Card_container__dYkWR">
+              <div class="Card_videoWrapper__Jpvu1">
+                <video class="Card_video__WzswZ" src="@/assets/videos/dest4.mp4" preload="none" autoplay loop
+                  playsinline></video>
+              </div>
+              <div class="Card_bottom">
+                <div class="Card_info">
+                  <span class="Card_destination">Nha Trang Beach</span>
                   <span class="Card_date__Pudsn">Jun 2-Jun 6</span>
                 </div>
                 <button
@@ -657,7 +672,7 @@ $card-width: 260px;
   }
 }
 
-.SearchInput_input_wrapper__S87AR {
+.SearchInput_input_wrapper {
   position: relative;
   max-width: 406px;
   width: 100%;
@@ -681,7 +696,7 @@ $card-width: 260px;
   outline: none;
 }
 
-.SearchInput_button__n_YGO {
+.SearchInput_button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -709,7 +724,7 @@ img {
   height: 20px;
 }
 
-.SearchInput_input_wrapper__S87AR {
+.SearchInput_input_wrapper {
   position: relative;
   max-width: 406px;
   width: 100%;

@@ -158,7 +158,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
 
     def get_permissions(self):
         """Returns the permission based on the type of action"""
-        if self.action in ["login", "register", "refresh_token","loginWithGoogle"]:
+        if self.action in ["login", "register", "refresh_token", "loginWithGoogle"]:
             return [AllowAny()]
         return [IsAuthenticated()]
 
@@ -178,11 +178,11 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
         password = request.data.get("password")
-        data={
-            'email':email,
-            'first_name':first_name,
-            'last_name':last_name,
-            'password':password
+        data = {
+            "email": email,
+            "first_name": first_name,
+            "last_name": last_name,
+            "password": password,
         }
         # Put the data from the request into the serializer
         serializer = CreateUserSerializer(data=data)
@@ -191,56 +191,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             # If it is valid, save the data (creates a user).
             user = serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
-            # Then we get a token for the created user.
-            # This could be done differentley
-
-            # r = requests.post('http://127.0.0.1:8000/o/token/',
-            #     data={
-            #         'grant_type': 'password',
-            #         'username': request.data['email'],
-            #         'password': request.data['password'],
-            #         'client_id': DEFAULT_CLIENT_ID,
-            #         'client_secret': DEFAULT_CLIENT_ID,
-            #     },
-            # )
-            # request.POST._mutable = True
-            # request.POST.update(
-            #     {
-            #         "grant_type": "password",
-            #         "client_type": "confidential",
-            #         'username': request.data['email'],
-            #         'password': request.data['password'],
-            #         "client_id": DEFAULT_CLIENT_ID,
-            #         "client_secret": DEFAULT_CLIENT_SECRET,
-            #        # "scope": list_to_scope(scopes)
-            #     }
-            # )
-            # url, headers, body, status = self.create_token_response(request)
-            # if status == 200:
-            #     access_token = json.loads(body).get("access_token")
-            #     if access_token is not None:
-            #         token = AccessToken.objects.get(token=access_token)
-            #         app_authorized.send(sender=self, request=request, token=token)
-            # response = HttpResponse(content=body, status=status)
-
-            # for k, v in headers.items():
-            #     response[k] = v
-            # return response
-
-            # Send welcome email
-            # try:
-            #     OAuth2Service.send_verify_email(request, user)
-            #     return Response(
-            #         {"message": _("The invitation have been sent.")}, status=HTTP_200_OK
-            #     )
-            # except Exception as e:
-            #     print(e)
-            #     return Response(
-            #         {"message": _("There is an error occur.")},
-            #         status=HTTP_500_INTERNAL_SERVER_ERROR,
-            #     )
-
-        return Response(serializer.errors, status=HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     @action(
         detail=False,
@@ -288,6 +239,7 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             }
         )
         url, headers, body, status = self.create_token_response(request)
+
         if status == 200:
             access_token = json.loads(body).get("access_token")
             if access_token is not None:
@@ -337,13 +289,9 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
 
     @action(detail=False, methods=["post"], url_path="logout")
     def logout(self, request, pk=None):
-       
+
         refresh_token = request.POST.get("refresh_token")
         access_token = request.POST.get("access_token")
-        print(
-            'hello: ',refresh_token,access_token
-        )
-        
         request.POST._mutable = True
         # revoke refresh_token first, to make user can not renew access_token
         request.POST.update(
@@ -376,5 +324,3 @@ class Oauth2ViewSet(OAuthLibMixin, ViewSet):
             )
 
         return Response({"message": "logout success!"}, status=HTTP_200_OK)
-
- 

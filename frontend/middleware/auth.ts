@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  const authStore = useAuthStore();
-  const { isLoggedIn, access_token } = storeToRefs(authStore);
+  const { isLoggedIn, access_token } = storeToRefs(useAuthStore()); // make authenticated state reactive
+  const accessToken = useCookie('accessToken'); // get token from cookies
   const localAccessToken = useCookie('accessToken'); // lấy token từ cookie
 
   // Đồng bộ trạng thái đăng nhập
@@ -19,12 +19,12 @@ export default defineNuxtRouteMiddleware((to, from) => {
   // Nếu token không tồn tại và trang đích không phải là trang login, chuyển hướng về trang login
   if (!isLoggedIn.value && to?.name !== 'login') {
     abortNavigation();
-    return navigateTo('/auth/newlogin');
+    return navigateTo('/auth/login');
   }
 
   // Nếu token không tồn tại và trang đích là trang dashboard, chuyển hướng về trang login
   if (!isLoggedIn.value && to?.name === 'dashboard') {
     abortNavigation();
-    return navigateTo('/auth/newlogin');
+    return navigateTo('/auth/login');
   }
 });

@@ -8,37 +8,29 @@ const router = useRouter()
 api.interceptors.request.use(
     async (config) => {
         const authStore = useAuthStore();
-        console.log(authStore.$state.expired_time)
+
+        // console.log(authStore.$state.expired_time)
         // Check if the access token is expired
         if (new Date(authStore.$state.expired_time) <= new Date()) {
             const refreshed = await authStore.refreshAccessToken();
 
             if (!refreshed) {
                 // Redirect to login if token refreshing fails
-                // await authStore.logout();
-                localStorage.clear();
-
-                // Xóa token từ cookie
-                const token = useCookie('accessToken');
-                token.value = null;
-
-                // Cập nhật trạng thái xác thực
-
-                // toast.add({
-                //     title: 'Logout successfully',
-                //     timeout: 5000,
-                // });
-                router.push('/auth/newlogin');
+                await authStore.logout();
+                router.push('/auth/login');
                 return Promise.reject(new Error('Token expired'));
             }
         }
 
         // Set Authorization header
         config.headers['Authorization'] = `Bearer ${authStore.$state.access_token}`;
-        config.headers['Accept'] = 'application/json';
+        config.headers['ngrok-skip-browser-warning'] = `skip-browser-warning`;
         return config;
     },
-    (error) => Promise.reject(error)
+    (error) => {
+        console.log(error)
+        Promise.reject(error)
+    }
 );
 
 export default api;

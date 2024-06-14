@@ -18,6 +18,29 @@ export const useAuthStore = defineStore({
         user: localStorage.getItem('user') || null,
     }),
     actions: {
+        async register(registerForm: any) {
+            try {
+                const result = await fetch(`${baseUrl}/api/v1/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        first_name: registerForm.first_name,
+                        last_name: registerForm.last_name,
+                        email: registerForm.email,
+                        password: registerForm.password
+                    })
+                });
+
+                if (!result.ok) {
+                    const errorData = await result.json();
+                    throw new Error(errorData.message || 'Registration failed');
+                }
+
+                return result;
+            } catch (err) {
+                throw err;
+            }
+        },
         async login(username: string, password: string) {
             try {
                 const formData = new FormData();
@@ -28,18 +51,19 @@ export const useAuthStore = defineStore({
                         'Content-Type': 'multipart/form-data'
                     }
                 });
+                console.log('result login: ', result)
                 if (result.status == 200) {
                     this.$state.access_token = result.data.access_token;
                     this.$state.refresh_token = result.data.refresh_token;
                     this.$state.isLoggedIn = true;
                     const { sub, iat, exp, nbf, scope } = decodeToken(this.$state.access_token);
-                    let format_sub = sub.replace("-", '')
+                    // let format_sub = sub.replace("-", '')
                     const currentTime = new Date();
                     this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
                     const token = useCookie('accessToken', { maxAge: result.data.expires_in * 1000 }); // useCookie new hook in nuxt 3
                     token.value = this.$state.access_token
-                    console.log(format_sub)
-                    const userData = await this.getUserById(format_sub);
+                    console.log(sub)
+                    const userData = await this.getUserById(sub);
                     this.$state.user = userData;
 
                     // Persist the state to localStorage
@@ -57,7 +81,7 @@ export const useAuthStore = defineStore({
 
             } catch (error) {
                 toast.add({
-                    title: 'Login unsuccessfully',
+                    title: 'Login failed',
                     description: 'Invalid username or password, please check again',
                     icon: 'i-octicon-desktop-download-24',
                     timeout: 10000,
@@ -69,22 +93,24 @@ export const useAuthStore = defineStore({
             const formData = new FormData();
             // formData.append("credential", credential);
             formData.append("access_token", credential);
-            const result = await api.post(`/api/v1/google/login/`, formData, {
+            const result = await axios.post(`${baseUrl}/api/v1/google/login/`, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'ngrok-skip-browser-warning': 'skip-browser-warning'
                 }
             });
+            console.log('result login GG: ', result)
             if (result.status == 200) {
                 this.$state.access_token = result.data.access_token;
                 this.$state.refresh_token = result.data.refresh_token;
                 this.$state.isLoggedIn = true;
                 const { sub, iat, exp, nbf, scope } = decodeToken(this.$state.access_token);
-                let format_sub = sub.replace("-", '')
+                // let format_sub = sub.replace("-", '')
                 const currentTime = new Date();
                 this.$state.expired_time = new Date(currentTime.getTime() + result.data.expires_in * 1000).toISOString();
                 const token = useCookie('accessToken'); // useCookie new hook in nuxt 3
                 token.value = this.$state.access_token
-                const userData = await this.getUserById(format_sub);
+                const userData = await this.getUserById(sub);
                 this.$state.user = userData;
 
                 // Persist the state to localStorage
@@ -98,54 +124,25 @@ export const useAuthStore = defineStore({
             }
             return result;
         },
-        // async getUserById(userId: string) {
-        //     const { data, error } = await useFetch(`${baseUrl}/api/v1/users/${userId}`);
-        //     console.log('getUserById',data.value)
-        //     return data.value;
-        // },
-        // async getUserById(userId: string) {
-        //     try {
-        //         let res = await api.get(`/api/v1/users/${userId}`, {
-        //             headers: {
-        //                 'Content-Type':'application/json',
-        //                 'Accept': 'application/json'
-        //             }
-        //         }
-        //         )
-        //         if (res.status == 200) {
-        //             console.log('res: ', res)
-        //             return res.data
-        //         } else {
-        //             console.error(`Server error ${res.status} when fetching user ${userId}`);
-        //         }
-        //         return null
-        //     } catch (e) {
-        //         console.error(e)
-        //     }
-        // },
         async getUserById(userId: string) {
             try {
                 const response = await fetch(`${baseUrl}/api/v1/users/${userId}`, {
                     method: 'GET',
                     headers: {
-                        // 'Content-Type': 'application/json',
-                        // 'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                         'Authorization': `Bearer ${this.$state.access_token}`,
                         'ngrok-skip-browser-warning': 'skip-browser-warning'
                     }
                 });
 
-                console.log('response user: ', response)
                 if (response.ok) { // Checks if the status is in the range 200-299
-                    // Parse the JSON respons
-                    const data = await response.json();
-                    console.log('res:', data);
+                    const data = await response.json(); // Parse the JSON response
                     return data;
                 } else {
                     console.error(`Server error ${response.status} when fetching user ${userId}`);
                     return null;
                 }
-
             } catch (error) {
                 console.error('An error occurred while fetching user data:', error);
                 return null;
@@ -159,15 +156,9 @@ export const useAuthStore = defineStore({
             return this.isLoggedIn && new Date(this.expired_time) > new Date();
         },
         async logout() {
-            const accessToken = this.$state.access_token || localStorage.getItem('access_token');
-            const refreshToken = this.$state.refresh_token || localStorage.getItem('refresh_token');
-
-            if (!accessToken || !refreshToken) {
-                console.error('Access token or refresh token is missing.');
-                return;
-            }
-
             try {
+                const accessToken = this.$state.access_token
+                const refreshToken = this.$state.refresh_token
                 const formData = new FormData();
                 formData.append("access_token", accessToken);
                 formData.append("refresh_token", refreshToken);
@@ -195,6 +186,12 @@ export const useAuthStore = defineStore({
                         timeout: 5000,
                     });
                 } else {
+                    // toast.add({
+                    //     title: 'Logout Failed',
+                    //     description: 'Server is rundown',
+                    //     icon: 'i-octicon-desktop-download-24',
+                    //     timeout: 10000,
+                    // })
                     console.error('Logout failed:', res.status, res.data);
                 }
             } catch (error) {
@@ -216,15 +213,13 @@ export const useAuthStore = defineStore({
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-                
+
                 if (response.status === 200) {
-                    // console.log('res data', response.data)
                     this.$state.access_token = response.data.access_token;
                     this.$state.refresh_token = response.data.refresh_token;
                     const currentTime = new Date();
-                    const expiresIn = response.data.expires_in * 1000; // Đảm bảo thời gian là miligiây
-                    const expirationTime = new Date(currentTime.getTime() + expiresIn).toISOString();
-                    this.$state.expired_time = expirationTime;
+                    this.$state.expired_time = new Date(currentTime.getTime() + response.data.expires_in * 1000).toISOString();
+
                     // Update localStorage
                     localStorage.setItem('access_token', this.$state.access_token);
                     localStorage.setItem('refresh_token', this.$state.refresh_token);
@@ -239,7 +234,6 @@ export const useAuthStore = defineStore({
                     return false; // Refresh failed
                 }
             } catch (error) {
-                // console.error('Error refreshing token:', error);
                 return false;
             }
         },

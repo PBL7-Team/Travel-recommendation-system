@@ -82,7 +82,6 @@ JWT_ISSUER = (
 # DEBUG = env.bool('DEBUG',default=False)
 DEBUG = True
 API_HOST = env("API_HOST")
-# ALLOWED_HOSTS = ["*"]
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
     default=[
