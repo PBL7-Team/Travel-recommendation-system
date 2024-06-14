@@ -147,6 +147,7 @@ nlu:
       - Địa điểm sinh thái ở Đồng Tháp
       - Điểm du lịch ở Bình Thuận
       - Cắm trại ở Đà Lạt
+      - Cho tôi địa điểm có những cảnh đẹp ven biển, có nhiều gái xinh
 
   - intent: greet
     examples: |
