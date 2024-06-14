@@ -28,10 +28,12 @@ def generate_recommendation_message(recommendations, entity, num = None):
         msg = "Dưới đây là danh sách địa điểm phù hợp:\n"
         msg += "\n".join(recommendations[:num_recommendations])
 
-    return {
+    message= {
         "message": msg,
         "entity": entity
     }
+    print(message)
+    return message
 
 def recommend_place(message,num):
     url = "http://flask-app.southeastasia.cloudapp.azure.com:8080/recommend"
