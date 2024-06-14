@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
         }}</span>
       <BaseIcon v-if="item.menu" :path="isDropdownActive ? mdiChevronUp : mdiChevronDown"
         class="hidden lg:inline-flex transition-colors" />
-      <a v-if="item.isButton && !isLoggedIn" href="/auth/newlogin"
+      <a v-if="item.isButton && !isLoggedIn" href="/auth/login"
         class="cta inline-block bg-blue-600 text-white hover:bg-blue-500 px-3 py-2 rounded">Get
         Started</a>
     </div>

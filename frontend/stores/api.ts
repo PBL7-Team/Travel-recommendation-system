@@ -17,7 +17,7 @@ api.interceptors.request.use(
             if (!refreshed) {
                 // Redirect to login if token refreshing fails
                 await authStore.logout();
-                router.push('/auth/newlogin');
+                router.push('/auth/login');
                 return Promise.reject(new Error('Token expired'));
             }
         }

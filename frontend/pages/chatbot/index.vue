@@ -1,6 +1,4 @@
 <script setup>
-import Navbar from '@/components/DefaultNavbar.vue'
-import Footer from '@/components/IndexFooter.vue'
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiUrl;
 import { useAuthStore } from '@/stores/auth.store';
@@ -16,10 +14,6 @@ const messages = ref([
         role: 'AI',
         message: 'Xin chào! Tôi có thể giúp gì cho bạn?'
     },
-    // {
-    //     role: 'AI',
-    //     message: 'Hello! How can I help you?1'
-    // }
 ]);
 const loading = ref(false);
 const message = ref('');

@@ -18,6 +18,29 @@ export const useAuthStore = defineStore({
         user: localStorage.getItem('user') || null,
     }),
     actions: {
+        async register(registerForm: any) {
+            try {
+                const result = await fetch(`${baseUrl}/api/v1/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        first_name: registerForm.first_name,
+                        last_name: registerForm.last_name,
+                        email: registerForm.email,
+                        password: registerForm.password
+                    })
+                });
+
+                if (!result.ok) {
+                    const errorData = await result.json();
+                    throw new Error(errorData.message || 'Registration failed');
+                }
+
+                return result;
+            } catch (err) {
+                throw err;
+            }
+        },
         async login(username: string, password: string) {
             try {
                 const formData = new FormData();
