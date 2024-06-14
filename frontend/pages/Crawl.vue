@@ -58,7 +58,7 @@ const getCrawlInfo = async () => {
 }
 const cancelCrawl = async () => {
     try {
-        const response = await axios.get(`${baseUrl}/cancel-crawl`)
+        const response = await axios.get(`${baseUrl}/stop-crawl`)
         toast.add({
             title: 'Crawl Canceled',
             description: response.data.message || 'The crawling has been canceled.',
