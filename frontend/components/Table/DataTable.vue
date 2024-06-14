@@ -1,85 +1,93 @@
 <script setup lang="ts">
-import SearchBox from '@/components/Table/SearchBox.vue'
-import { computed, ref } from 'vue'
-import TableCheckboxCell from '@/components/TableCheckboxCell.vue'
-import Pagination from './Pagination.vue'
+import SearchBox from '@/components/Table/SearchBox.vue';
+import { computed, ref } from 'vue';
+import TableCheckboxCell from '@/components/TableCheckboxCell.vue';
+import Pagination from './Pagination.vue';
 
 const props = defineProps({
     items: {
-        type: Array,
-        required: true
+        type: Array as () => Array<any>,
+        required: true,
     },
     headers: {
-        type: Array,
-        required: true
+        type: Array as () => Array<{ key: string; label: string }>,
+        required: true,
     },
     totalPages: {
-        type: Number,
-        required: true
+        type: Number as () => number,
+        required: true,
     },
     currentPage: {
-        type: Number,
-        required: true
+        type: Number as () => number,
+        required: true,
     },
+    checkable: Boolean,
+    isDestination: Boolean,
 
-    checkable: {
-        type: Boolean,
-        required: false
-    }
+    totalReviews: {
+        type: Number as () => number,
+        required: false,
+    },
+    totalRawReviews: {
+        type: Number as () => number,
+        required: false,
+    },
 });
 
-const searchQuery = ref('')
-// Define emits
-const emit = defineEmits(['checked', 'page-changed']);
-
+const emit = defineEmits(['checked', 'page-changed', 'sync-data']);
+const searchQuery = ref('');
 
 const filterItems = computed(() => {
-    if (searchQuery.value !== '') {
+    if (searchQuery.value.trim() !== '') {
+        const lowerCaseQuery = searchQuery.value.trim().toLowerCase();
         return props.items.filter(item =>
             props.headers.some(header =>
-                item[header.key]?.toString().toLowerCase().includes(searchQuery.value.toLowerCase())
+                String(item[header.key]).toLowerCase().includes(lowerCaseQuery)
             )
-        )
+        );
     }
-    return props.items
-})
-const handleSearch = (search) => {
+    return props.items;
+});
+
+const handleSearch = (search: string) => {
     searchQuery.value = search;
-}
+};
 
+const showModal = ref(false);
 
-
-// Modal import 
-// Reactive state for modal visibility
-const showModal = ref(false)
-
-// Function to open the modal
 const openModal = () => {
-    showModal.value = true
-}
+    showModal.value = true;
+};
 
-// Handle checkbox click
 const handleCheck = (isChecked: boolean, item: any) => {
     emit('checked', isChecked, item);
 };
 
-// Handle page change
 const changePage = (page: number) => {
     emit('page-changed', page);
 };
 
-
+const handleClickSyncData = () => {
+    emit('sync-data');
+};
 </script>
+
 <template>
     <div class="p-6 xl:max-w-6xl xl:mx-auto flex-1">
         <div class="flex relative items-center justify-between">
             <!-- Search -->
             <SearchBox @search="handleSearch" />
-            <button @click="openModal" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                Import data
+            <button @click="handleClickSyncData" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Sync data
             </button>
         </div>
-        <table class="w-full border border-collapse border-round-sm text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <div v-if="isDestination" class="mt-4 text-gray-600 dark:text-gray-400">
+            Total Reviews: {{ props.totalReviews }}
+            <span class="mx-2">|</span>
+            Total Raw Reviews: {{ props.totalRawReviews }}
+        </div>
+        <table
+            class="w-full border border-collapse border-round-sm text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4">
             <thead class="text-xs text-gray-700 uppercase bg-white dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th v-if="props.checkable" />
@@ -89,16 +97,18 @@ const changePage = (page: number) => {
                     </th>
                 </tr>
             </thead>
-            <tr v-for="item in filterItems" :key="item.id"
-                class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                <TableCheckboxCell v-if="props.checkable" @checked="(isChecked) => handleCheck(isChecked, item)" />
-                <td v-for="header in headers" :key="header.key" class="px-4 py-3 text-ellipsis overflow-hidden">{{
-                    item[header.key] }}</td>
-                <td class="px-4 py-3 flex items-center justify-end">
-                    <a href="#" class="text-indigo-500 hover:underline">Details</a>
-                </td>
-            </tr>
+            <tbody>
+                <tr v-for="item in filterItems" :key="item.id"
+                    class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                    <TableCheckboxCell v-if="props.checkable" @checked="(isChecked) => handleCheck(isChecked, item)" />
+                    <td v-for="header in headers" :key="header.key" class="px-4 py-3 text-ellipsis overflow-hidden">{{
+                        item[header.key] }}</td>
+                    <td class="px-4 py-3 flex items-center justify-end">
+                        <a href="#" class="text-indigo-500 hover:underline">Details</a>
+                    </td>
+                </tr>
+            </tbody>
         </table>
-        <Pagination :totalPage="props.totalPages" :currentPage="props.currentPage" />
+        <Pagination :totalPages="props.totalPages" :currentPage="props.currentPage" @change="changePage" />
     </div>
 </template>
