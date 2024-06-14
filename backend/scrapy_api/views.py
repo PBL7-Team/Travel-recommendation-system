@@ -18,6 +18,8 @@ class MyAPIView(APIView):
             return self.sentiment_calculate()
         elif action == "get-crawl-info":
             return self.get_crawl_info()
+        elif action == "stop-crawl":
+            return self.stop_crawl()
         else:
             return Response(
                 {"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST
@@ -25,6 +27,24 @@ class MyAPIView(APIView):
 
     def start_crawl(self):
         url = "http://flask-app.southeastasia.cloudapp.azure.com:8080/start-crawl"
+        headers = {"API-Key": "PBL_7_Traveling"}
+        try:
+            response = requests.get(url, headers=headers)
+            result = response.json()
+            return Response(result, status=status.HTTP_200_OK)
+        except requests.exceptions.RequestException as err:
+            return Response(
+                {"message": f"Error occurred: {err}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        except ValueError as json_err:
+            return Response(
+                {"message": "Invalid JSON response"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    def stop_crawl(self):
+        url = "http://flask-app.southeastasia.cloudapp.azure.com:8080/stop-crawl"
         headers = {"API-Key": "PBL_7_Traveling"}
         try:
             response = requests.get(url, headers=headers)
