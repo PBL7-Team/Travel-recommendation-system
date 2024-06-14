@@ -19,19 +19,23 @@ def convert_vietnamese_number_to_int(num_str):
 
     return vietnamese_numbers.get(num_str, None)
 
-def generate_recommendation_message(recommendations, num = None):
+def generate_recommendation_message(recommendations, entity, num = None):
     if num:
         msg = "Dưới đây là danh sách địa điểm phù hợp:\n"
         msg += "\n".join(recommendations[:num])
-        return msg
     else:
         num_recommendations = min(5, len(recommendations))
         msg = "Dưới đây là danh sách địa điểm phù hợp:\n"
         msg += "\n".join(recommendations[:num_recommendations])
-        return msg
+
+    return {
+        "message": msg,
+        "entity": entity
+    }
 
 def recommend_place(message,num):
     url = "http://flask-app.southeastasia.cloudapp.azure.com:8080/recommend"
+    
     
     params = {'message': message}
     headers = {'API-Key': 'PBL_7_Traveling'}
@@ -40,16 +44,17 @@ def recommend_place(message,num):
 
     if response.status_code == 200:
         data = response.json()
-        recommendations = data.get('message', [])
+        recommendations = data["message"][0]
+        entity = data["message"][1]
         if recommendations:
             if num:
                 num = convert_vietnamese_number_to_int(num)
                 if num:
-                    return generate_recommendation_message(recommendations, num)
+                    return generate_recommendation_message(recommendations,entity, num),
                 else:
-                    return "Không thể chuyển đổi số"
+                    return generate_recommendation_message(recommendations,entity)
             else:
-                return generate_recommendation_message(recommendations)
+                return generate_recommendation_message(recommendations,entity)
         else:
             return "Không tìm thấy địa điểm phù hợp"
     else:
