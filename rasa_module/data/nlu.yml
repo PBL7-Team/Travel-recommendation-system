@@ -127,6 +127,26 @@ nlu:
       - Địa điểm du lịch lịch sử ở Quảng Trị là gì?
       - Cắm trại ở đâu tại Đà Lạt là lý tưởng nhất?
       - Khu vui chơi nào ở Bình Định phù hợp cho gia đình?
+      - Điểm ăn uống ngon ở Hà Nội?
+      - Chơi gì ở Hội An
+      - Đà Lạt có gì thú vị
+      - Món ăn đặc sản ở Huế
+      - Đi đâu ở Sài Gòn
+      - Check-in đẹp ở Nha Trang
+      - Bãi biển đẹp ở Phú Quốc
+      - Cà phê ngon ở Đà Nẵng
+      - Thắng cảnh đẹp ở Quảng Ninh
+      - Hải sản tươi ở Cần Thơ
+      - Chợ đêm ở Đà Nẵng
+      - Vui chơi gì ở Vũng Tàu
+      - Đi đâu ở Tây Ninh
+      - Địa điểm lịch sử ở Huế
+      - Khu vui chơi ở Bình Dương
+      - Nhà hàng ngon ở Hải Phòng
+      - Phong cảnh đẹp ở Đà Lạt
+      - Địa điểm sinh thái ở Đồng Tháp
+      - Điểm du lịch ở Bình Thuận
+      - Cắm trại ở Đà Lạt
 
   - intent: greet
     examples: |
